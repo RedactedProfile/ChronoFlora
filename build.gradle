@@ -37,6 +37,13 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/releases/" }
         maven { url "https://jitpack.io" }
     }
+
+    tasks.withType(JavaCompile).tap {
+        configureEach {
+            sourceCompatibility = '16'
+            targetCompatibility = '16'
+        }
+    }
 }
 
 project(":desktop") {
