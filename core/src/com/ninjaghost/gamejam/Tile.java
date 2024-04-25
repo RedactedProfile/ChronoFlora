@@ -2,6 +2,7 @@ package com.ninjaghost.gamejam;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class Tile {
     public enum LAYER { NONE, BOTTOM, FLOOR, PLAYER, CEILING, SKY };
@@ -16,5 +17,10 @@ public class Tile {
         if(m_sprite == null) {
             throw new IllegalArgumentException("Sprite path '" + spritePath + "' does not exist");
         }
+    }
+
+    public void draw(SpriteBatch batch, int _x, int _y) {
+        m_sprite.setPosition(_x, _y);
+        m_sprite.draw(batch);
     }
 }
