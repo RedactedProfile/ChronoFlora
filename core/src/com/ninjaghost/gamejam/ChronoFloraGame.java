@@ -3,6 +3,7 @@ package com.ninjaghost.gamejam;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -33,6 +34,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 	OrthographicCamera camera;
 	float[] cameraZoomFactor = new float[] { 1f };
+	float[] cameraFocus = new float[] { 0f, 0f };
 
 	ArrayList<Tile> tiles = new ArrayList<>();
 	int tilemapBreak = 32;
@@ -84,9 +86,16 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 		ImGui.createContext();
 		ImGui.getIO().setDisplaySize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-//		ImGui.getIO().addConfigFlags(ImGuiConfigFlags.NavEnableSetMousePos);
+//		ImGui.getIO().addConfigFlags(ImGuiConfigFlags.NavEnableSetMousePos | ImGuiConfigFlags.NavEnableKeyboard);
 		imGuiImplGl3 = new ImGuiImplGl3();
 		imGuiImplGl3.init("#version 150");
+
+
+		InputMultiplexer inputMultiplexer = new InputMultiplexer();
+		inputMultiplexer.addProcessor(new ImGuiInputProcessor());
+		inputMultiplexer.addProcessor(new GameInputProcessor());
+		Gdx.input.setInputProcessor(inputMultiplexer);
+
 
 		// THis is to let the stage object handle input
 		// Gdx.input.setInputProcessor(uiStage);
@@ -100,7 +109,6 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		for(FileHandle _file : Gdx.files.internal("tiles/").list()) {
 			tiles.add(new Tile(_file.path()));
 		}
-
 
 		_field = new TextField("Hi", uiSkin);
 		_field.setPosition(100, 100);
@@ -151,19 +159,37 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 
 		// Render ImGUI
+		// Update mouse input
 		ImGuiIO io = ImGui.getIO();
-		io.setMousePos(Gdx.input.getX(), Gdx.input.getY()); // Flip Y-axis for ImGui
+		io.setMousePos(Gdx.input.getX(), Gdx.input.getY());
 		io.setMouseDown(0, Gdx.input.isButtonPressed(Input.Buttons.LEFT));
 		io.setMouseDown(1, Gdx.input.isButtonPressed(Input.Buttons.RIGHT));
 		io.setMouseDown(2, Gdx.input.isButtonPressed(Input.Buttons.MIDDLE));
+		// Update keyboard inputs
+		// You can use an InputProcessor to handle and forward keyboard events to ImGui
+		for (int i = 0; i < 256; i++) {
+			if (Gdx.input.isKeyJustPressed(i)) {
+				io.setKeysDown(i, true);
+			}
+			if (Gdx.input.isKeyJustPressed(i)) {
+				io.setKeysDown(i, false);
+			}
+		}
+		io.setKeyCtrl(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT));
+		io.setKeyShift(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT));
+		io.setKeyAlt(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT));
+		io.setKeySuper(Gdx.input.isKeyPressed(Input.Keys.SYM));
+
 		ImGui.newFrame();
 
 		// Example window
 		ImGui.begin("Hello, ImGui!");
 		ImGui.text(String.format("This is some useful text. %f", camera.zoom));
+		ImGui.text("Camera Settings");
+		ImGui.inputFloat2("Focus", cameraFocus);
+		ImGui.sliderFloat("Zoom", cameraZoomFactor, 0.01f, 1f);
 //		ImGui.button("Click Me!");
 
-		ImGui.sliderFloat("Zoom", cameraZoomFactor, 0.01f, 1f);
 
 		ImGui.end();
 
