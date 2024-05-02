@@ -14,6 +14,7 @@ final public class Player {
     public final Vector2 currentPosition = new Vector2();
 
     public float moveSpeed = 25f;
+    public float movementVelocity = 0f;
 
     public Player() {
         targetPosition.set(150, 150);
@@ -34,6 +35,7 @@ final public class Player {
         targetPosition.set(newPosition.x, newPosition.y);
 
         currentPosition.lerp(targetPosition, normalizedMoveSpeed / 2);
+        movementVelocity = currentPosition.dst(targetPosition);
         m_sprite.setPosition(currentPosition.x, currentPosition.y);
     }
 

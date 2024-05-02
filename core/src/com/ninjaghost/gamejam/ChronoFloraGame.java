@@ -28,6 +28,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
 	Texture img;
 	BitmapFont bitmapFont;
 
+	boolean showImGui = true;
 	ImGuiImplGl3 imGuiImplGl3;
 
 
@@ -35,8 +36,10 @@ public class ChronoFloraGame extends ApplicationAdapter {
 	Skin uiSkin;
 
 	OrthographicCamera camera;
-	float[] cameraTargetZoomFactor = new float[] { 0.3f };
-	float[] calculatedZoomFactor = new float[] { 0.5f };
+	float maxZoom = 0.3f;
+	float minZoom = 0.5f;
+	float[] cameraTargetZoomFactor = new float[] { maxZoom };
+	float[] calculatedZoomFactor = new float[] { minZoom };
 	float zoomSpeed = 1f;
 	float[] cameraFocus = new float[] { 0f, 0f };
 	float cameraFocusSpeed = 1f;
@@ -130,11 +133,18 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-
+		float newTargetCameraZoom = cameraTargetZoomFactor[0];
+		if(player.movementVelocity > 0.5f) { // is moving, effectively
+			newTargetCameraZoom += player.movementVelocity / 4 * Gdx.graphics.getDeltaTime();
+		} else {
+			newTargetCameraZoom -= zoomSpeed / 2 * Gdx.graphics.getDeltaTime();
+		}
+		if(newTargetCameraZoom > minZoom) { newTargetCameraZoom = minZoom; }
+		else if(newTargetCameraZoom < maxZoom) { newTargetCameraZoom = maxZoom; }
+		cameraTargetZoomFactor[0] = newTargetCameraZoom;
 
 		// Control Camera Zoom
-		float zoomDelta = 1.f;
-		calculatedZoomFactor[0] = Interpolation.linear.apply(calculatedZoomFactor[0], cameraTargetZoomFactor[0], zoomDelta * Gdx.graphics.getDeltaTime());;
+		calculatedZoomFactor[0] = Interpolation.linear.apply(calculatedZoomFactor[0], cameraTargetZoomFactor[0], zoomSpeed * Gdx.graphics.getDeltaTime());;
 		camera.zoom = calculatedZoomFactor[0];
 
 		// Control camera focus
@@ -171,6 +181,9 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		player.update(Gdx.graphics.getDeltaTime(), gameplayInputState);
 		cameraFocus[0] = player.targetPosition.x;
 		cameraFocus[1] = player.targetPosition.y;
+
+
+
 		player.draw(batch);
 
 		batch.end();
@@ -181,6 +194,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		uiStage.draw();
 
 
+		if(!showImGui) return;
 		// Render ImGUI
 		// Update mouse input
 		ImGuiIO io = ImGui.getIO();
@@ -206,6 +220,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 		ImGui.newFrame();
 		ImGui.begin("Hello, ImGui!");
+		ImGui.text(String.format("player vel: %f", player.movementVelocity));
 		ImGui.text("Camera Settings");
 		ImGui.inputFloat2("Focus", cameraFocus);
 		ImGui.sliderFloat("Target Zoom", cameraTargetZoomFactor, 0.01f, 1f);
