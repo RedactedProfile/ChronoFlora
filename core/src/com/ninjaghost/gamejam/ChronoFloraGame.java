@@ -231,12 +231,10 @@ public class ChronoFloraGame extends ApplicationAdapter {
 	private float getNewTargetCameraZoom() {
 		float newTargetCameraZoom = cameraTargetZoomFactor[0];
 		if(player.movementVelocity > 0.5f) { // is moving, effectively
-			newTargetCameraZoom += player.movementVelocity / 4 * Gdx.graphics.getDeltaTime();
+			newTargetCameraZoom = minZoom;
 		} else {
-			newTargetCameraZoom -= zoomSpeed / 2 * Gdx.graphics.getDeltaTime();
+			newTargetCameraZoom = maxZoom;
 		}
-		if(newTargetCameraZoom > minZoom) { newTargetCameraZoom = minZoom; }
-		else if(newTargetCameraZoom < maxZoom) { newTargetCameraZoom = maxZoom; }
 		return newTargetCameraZoom;
 	}
 
