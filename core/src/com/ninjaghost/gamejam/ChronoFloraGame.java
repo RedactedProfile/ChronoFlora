@@ -17,7 +17,6 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import imgui.ImGui;
 import imgui.ImGuiIO;
-import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 
 import java.util.ArrayList;
@@ -35,8 +34,11 @@ public class ChronoFloraGame extends ApplicationAdapter {
 	Skin uiSkin;
 
 	OrthographicCamera camera;
-	float[] cameraZoomFactor = new float[] { 1f };
+	float[] cameraTargetZoomFactor = new float[] { 0.3f };
+	float[] calculatedZoomFactor = new float[] { 1f };
+	float zoomSpeed = 1f;
 	float[] cameraFocus = new float[] { 0f, 0f };
+	float cameraFocusSpeed = 1f;
 
 	ArrayList<Tile> tiles = new ArrayList<>();
 	int tilemapBreak = 32;
@@ -131,13 +133,15 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 		// Control Camera Zoom
 		float zoomDelta = 0f;
-		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			zoomDelta = 0.2f;
-		} else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			zoomDelta = -0.2f;
+		if(calculatedZoomFactor[0] != cameraTargetZoomFactor[0]) {
+			float value = (cameraTargetZoomFactor[0] / 2) * Gdx.graphics.getDeltaTime();
+			if(calculatedZoomFactor[0] > cameraTargetZoomFactor[0]) {
+				calculatedZoomFactor[0] -= value;
+			} else {
+				calculatedZoomFactor[0] += value;
+			}
 		}
-		cameraZoomFactor[0] -= zoomDelta * Gdx.graphics.getDeltaTime();
-		camera.zoom = cameraZoomFactor[0];
+		camera.zoom = calculatedZoomFactor[0];
 
 		// Control camera focus
 		camera.position.set(new Vector3(cameraFocus[0], cameraFocus[1], 0));
@@ -205,19 +209,15 @@ public class ChronoFloraGame extends ApplicationAdapter {
 //		io.setKeyAlt(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT));
 //		io.setKeySuper(Gdx.input.isKeyPressed(Input.Keys.SYM));
 
-		ImGui.newFrame();
 
-		// Example window
+		ImGui.newFrame();
 		ImGui.begin("Hello, ImGui!");
 		ImGui.text(String.format("This is some useful text. %f", camera.zoom));
 		ImGui.text("Camera Settings");
 		ImGui.inputFloat2("Focus", cameraFocus);
-		ImGui.sliderFloat("Zoom", cameraZoomFactor, 0.01f, 1f);
-//		ImGui.button("Click Me!");
-
-
+		ImGui.sliderFloat("Target Zoom", cameraTargetZoomFactor, 0.01f, 1f);
+		ImGui.sliderFloat("Current Zoom", calculatedZoomFactor, 0.01f, 1f);
 		ImGui.end();
-
 		ImGui.render();
 		imGuiImplGl3.renderDrawData(ImGui.getDrawData());
 	}
