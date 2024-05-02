@@ -13,6 +13,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import imgui.ImGui;
+import imgui.ImGuiIO;
+import imgui.flag.ImGuiConfigFlags;
+import imgui.gl3.ImGuiImplGl3;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +26,9 @@ public class ChronoFloraGame extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture img;
 	BitmapFont bitmapFont;
+
+	ImGuiImplGl3 imGuiImplGl3;
+
 
 	Stage uiStage;
 	Skin uiSkin;
@@ -80,6 +87,12 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		bitmapFont = new BitmapFont();
 		uiStage = new Stage(new ScreenViewport());
+
+		ImGui.createContext();
+		ImGui.getIO().setDisplaySize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+//		ImGui.getIO().addConfigFlags(ImGuiConfigFlags.NavEnableSetMousePos);
+		imGuiImplGl3 = new ImGuiImplGl3();
+		imGuiImplGl3.init("#version 150");
 
 		// THis is to let the stage object handle input
 		// Gdx.input.setInputProcessor(uiStage);
@@ -141,11 +154,37 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		// Render the UI
 		uiStage.act(Gdx.graphics.getDeltaTime());
 		uiStage.draw();
+
+
+		// Render ImGUI
+		ImGuiIO io = ImGui.getIO();
+		io.setMousePos(Gdx.input.getX(), Gdx.input.getY()); // Flip Y-axis for ImGui
+		io.setMouseDown(0, Gdx.input.isButtonPressed(Input.Buttons.LEFT));
+		io.setMouseDown(1, Gdx.input.isButtonPressed(Input.Buttons.RIGHT));
+		io.setMouseDown(2, Gdx.input.isButtonPressed(Input.Buttons.MIDDLE));
+		ImGui.newFrame();
+
+		// Example window
+		ImGui.begin("Hello, ImGui!");
+		ImGui.text("This is some useful text.");
+		ImGui.button("Click Me!");
+		ImGui.end();
+
+		ImGui.render();
+		imGuiImplGl3.renderDrawData(ImGui.getDrawData());
 	}
 	
 	@Override
 	public void dispose () {
 		batch.dispose();
 		img.dispose();
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		super.resize(width, height);
+		if (ImGui.getIO() != null) {
+			ImGui.getIO().setDisplaySize(width, height);
+		}
 	}
 }
