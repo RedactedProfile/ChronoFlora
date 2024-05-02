@@ -28,7 +28,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
 	Texture img;
 	BitmapFont bitmapFont;
 
-	boolean showImGui = true;
+	boolean showImGui = false;
 	ImGuiImplGl3 imGuiImplGl3;
 
 
@@ -133,6 +133,10 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
+		if(Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) {
+			showImGui = !showImGui;
+		}
+
 		// This chunk is all about setting a new target camera zoom based on player movement
 		float newTargetCameraZoom = getNewTargetCameraZoom();
 		cameraTargetZoomFactor[0] = newTargetCameraZoom;
