@@ -35,7 +35,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 	OrthographicCamera camera;
 	float[] cameraTargetZoomFactor = new float[] { 0.3f };
-	float[] calculatedZoomFactor = new float[] { 1f };
+	float[] calculatedZoomFactor = new float[] { 0.5f };
 	float zoomSpeed = 1f;
 	float[] cameraFocus = new float[] { 0f, 0f };
 	float cameraFocusSpeed = 1f;
@@ -132,15 +132,23 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 
 		// Control Camera Zoom
-		float zoomDelta = 0f;
+		float zoomDelta = 1.f;
+		float lastDiff = 0f;
 		if(calculatedZoomFactor[0] != cameraTargetZoomFactor[0]) {
-			float value = (cameraTargetZoomFactor[0] / 2) * Gdx.graphics.getDeltaTime();
+			float value = (cameraTargetZoomFactor[0] / 2) * zoomDelta * Gdx.graphics.getDeltaTime();
+			// if close enough, set value to 0
+			float diff =  calculatedZoomFactor[0] - cameraTargetZoomFactor[0];
+			lastDiff = diff;
+
 			if(calculatedZoomFactor[0] > cameraTargetZoomFactor[0]) {
+				if(lastDiff < 0.001) { value = 0; }
 				calculatedZoomFactor[0] -= value;
-			} else {
+			} else if(calculatedZoomFactor[0] < cameraTargetZoomFactor[0]) {
+				if(lastDiff > -0.001) { value = 0; }
 				calculatedZoomFactor[0] += value;
 			}
 		}
+
 		camera.zoom = calculatedZoomFactor[0];
 
 		// Control camera focus
@@ -212,7 +220,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 		ImGui.newFrame();
 		ImGui.begin("Hello, ImGui!");
-		ImGui.text(String.format("This is some useful text. %f", camera.zoom));
+		ImGui.text(String.format("Last diff. %f", lastDiff));
 		ImGui.text("Camera Settings");
 		ImGui.inputFloat2("Focus", cameraFocus);
 		ImGui.sliderFloat("Target Zoom", cameraTargetZoomFactor, 0.01f, 1f);
