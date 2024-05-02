@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.gl3.ImGuiImplGl3;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -120,9 +121,10 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		img = new Texture("badlogic.jpg");
 
 		System.out.println("Loading Tiles");
-		for(FileHandle _file : Gdx.files.internal("tiles/").list()) {
-			System.out.println("Loading " + _file.name());
-			tiles.add(new Tile(_file.path()));
+		for(int tid = 1; tid <= 272; tid++) {
+			String formatTid =  "tiles/tile_" + StringUtils.leftPad(Integer.toString(tid), 3, '0') + ".png";
+			System.out.println("Loading " + formatTid);
+			tiles.add(new Tile(formatTid));
 		}
 		System.out.println("Loaded " + tiles.size() + " tiles");
 
