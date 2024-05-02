@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
@@ -16,6 +17,7 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import imgui.ImGui;
 import imgui.ImGuiIO;
+import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 
 import java.util.ArrayList;
@@ -78,6 +80,9 @@ public class ChronoFloraGame extends ApplicationAdapter {
 	TextField _field;
 
 
+	Player player;
+	GameplayInputState gameplayInputState;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -87,13 +92,15 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		ImGui.createContext();
 		ImGui.getIO().setDisplaySize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 //		ImGui.getIO().addConfigFlags(ImGuiConfigFlags.NavEnableSetMousePos | ImGuiConfigFlags.NavEnableKeyboard);
+
 		imGuiImplGl3 = new ImGuiImplGl3();
 		imGuiImplGl3.init("#version 150");
 
 
+		gameplayInputState = new GameplayInputState();
 		InputMultiplexer inputMultiplexer = new InputMultiplexer();
 		inputMultiplexer.addProcessor(new ImGuiInputProcessor());
-		inputMultiplexer.addProcessor(new GameInputProcessor());
+		inputMultiplexer.addProcessor(new GameInputProcessor(gameplayInputState));
 		Gdx.input.setInputProcessor(inputMultiplexer);
 
 
@@ -114,11 +121,13 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		_field.setPosition(100, 100);
 		_field.setSize(200, 50);
 		uiStage.addActor(_field);
+
+		player = new Player();
 	}
 
 	@Override
 	public void render () {
-		camera.update();
+
 
 		// Control Camera Zoom
 		float zoomDelta = 0f;
@@ -129,6 +138,12 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		}
 		cameraZoomFactor[0] -= zoomDelta * Gdx.graphics.getDeltaTime();
 		camera.zoom = cameraZoomFactor[0];
+
+		// Control camera focus
+		camera.position.set(new Vector3(cameraFocus[0], cameraFocus[1], 0));
+
+		camera.update();
+
 
 		// Clear and Setup camera projection
 		ScreenUtils.clear(1, 0, 0, 1);
@@ -151,6 +166,16 @@ public class ChronoFloraGame extends ApplicationAdapter {
         }
 		batch.end();
 
+		// draw entities
+		batch.begin();
+
+//		player.render();
+		player.update(Gdx.graphics.getDeltaTime(), gameplayInputState);
+		cameraFocus[0] = player.position.x;
+		cameraFocus[1] = player.position.y;
+		player.draw(batch);
+
+		batch.end();
 
 
 		// Render the UI
@@ -165,20 +190,20 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		io.setMouseDown(0, Gdx.input.isButtonPressed(Input.Buttons.LEFT));
 		io.setMouseDown(1, Gdx.input.isButtonPressed(Input.Buttons.RIGHT));
 		io.setMouseDown(2, Gdx.input.isButtonPressed(Input.Buttons.MIDDLE));
-		// Update keyboard inputs
-		// You can use an InputProcessor to handle and forward keyboard events to ImGui
-		for (int i = 0; i < 256; i++) {
-			if (Gdx.input.isKeyJustPressed(i)) {
-				io.setKeysDown(i, true);
-			}
-			if (Gdx.input.isKeyJustPressed(i)) {
-				io.setKeysDown(i, false);
-			}
-		}
-		io.setKeyCtrl(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT));
-		io.setKeyShift(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT));
-		io.setKeyAlt(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT));
-		io.setKeySuper(Gdx.input.isKeyPressed(Input.Keys.SYM));
+//		// Update keyboard inputs
+//		// You can use an InputProcessor to handle and forward keyboard events to ImGui
+//		for (int i = 0; i < 256; i++) {
+//			if (Gdx.input.isKeyJustPressed(i)) {
+//				io.setKeysDown(i, true);
+//			}
+//			if (Gdx.input.isKeyJustPressed(i)) {
+//				io.setKeysDown(i, false);
+//			}
+//		}
+//		io.setKeyCtrl(Gdx.input.isKeyPressed(Input.Keys.CONTROL_LEFT) || Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT));
+//		io.setKeyShift(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.SHIFT_RIGHT));
+//		io.setKeyAlt(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT));
+//		io.setKeySuper(Gdx.input.isKeyPressed(Input.Keys.SYM));
 
 		ImGui.newFrame();
 

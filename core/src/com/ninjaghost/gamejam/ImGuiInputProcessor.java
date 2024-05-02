@@ -24,11 +24,19 @@ public class ImGuiInputProcessor implements InputProcessor {
     @Override
     public boolean keyTyped(char character) {
         ImGuiIO io = ImGui.getIO();
-        if (character != 0x7F && character >= 0x20) { // Filter out non-printable characters
+
+        // Backspace ASCII code is 8
+        if (character == 8) {
+            io.addInputCharacter(8);
+        }
+
+        // Other characters are added if they are printable
+        if (character >= 32 && character != 127) {  // 127 is the DEL key
             io.addInputCharacter(character);
         }
         return false;
     }
+
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {

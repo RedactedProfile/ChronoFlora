@@ -6,23 +6,34 @@ import com.badlogic.gdx.Input.Buttons;
 
 public class GameInputProcessor implements InputProcessor {
 
+    GameplayInputState gameplayInputState;
+
+    public GameInputProcessor(GameplayInputState gameplayInputState) {
+        this.gameplayInputState = gameplayInputState;
+    }
+
     @Override
     public boolean keyDown(int keycode) {
         switch (keycode) {
             case Keys.W:
                 System.out.println("Move forward");
+                gameplayInputState.up = true;
                 break;
             case Keys.S:
                 System.out.println("Move backward");
+                gameplayInputState.down = true;
                 break;
             case Keys.A:
                 System.out.println("Move left");
+                gameplayInputState.left = true;
                 break;
             case Keys.D:
                 System.out.println("Move right");
+                gameplayInputState.right = true;
                 break;
             case Keys.SPACE:
                 System.out.println("Jump");
+                gameplayInputState.action = true;
                 break;
         }
         return true;
@@ -30,8 +41,24 @@ public class GameInputProcessor implements InputProcessor {
 
     @Override
     public boolean keyUp(int keycode) {
-        // Handle key release if necessary
-        return false;
+        switch (keycode) {
+            case Keys.W:
+                gameplayInputState.up = false;
+                break;
+            case Keys.S:
+                gameplayInputState.down = false;
+                break;
+            case Keys.A:
+                gameplayInputState.left = false;
+                break;
+            case Keys.D:
+                gameplayInputState.right = false;
+                break;
+            case Keys.SPACE:
+                gameplayInputState.action = false;
+                break;
+        }
+        return true;
     }
 
     @Override
