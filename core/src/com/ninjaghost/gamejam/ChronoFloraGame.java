@@ -133,14 +133,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		float newTargetCameraZoom = cameraTargetZoomFactor[0];
-		if(player.movementVelocity > 0.5f) { // is moving, effectively
-			newTargetCameraZoom += player.movementVelocity / 4 * Gdx.graphics.getDeltaTime();
-		} else {
-			newTargetCameraZoom -= zoomSpeed / 2 * Gdx.graphics.getDeltaTime();
-		}
-		if(newTargetCameraZoom > minZoom) { newTargetCameraZoom = minZoom; }
-		else if(newTargetCameraZoom < maxZoom) { newTargetCameraZoom = maxZoom; }
+		// This chunk is all about setting a new target camera zoom based on player movement
+		float newTargetCameraZoom = getNewTargetCameraZoom();
 		cameraTargetZoomFactor[0] = newTargetCameraZoom;
 
 		// Control Camera Zoom
@@ -179,8 +173,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 //		player.render();
 		player.update(Gdx.graphics.getDeltaTime(), gameplayInputState);
-		cameraFocus[0] = player.targetPosition.x;
-		cameraFocus[1] = player.targetPosition.y;
+		cameraFocus[0] = player.lookAt.x;
+		cameraFocus[1] = player.lookAt.y;
 
 
 
@@ -229,7 +223,19 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		ImGui.render();
 		imGuiImplGl3.renderDrawData(ImGui.getDrawData());
 	}
-	
+
+	private float getNewTargetCameraZoom() {
+		float newTargetCameraZoom = cameraTargetZoomFactor[0];
+		if(player.movementVelocity > 0.5f) { // is moving, effectively
+			newTargetCameraZoom += player.movementVelocity / 4 * Gdx.graphics.getDeltaTime();
+		} else {
+			newTargetCameraZoom -= zoomSpeed / 2 * Gdx.graphics.getDeltaTime();
+		}
+		if(newTargetCameraZoom > minZoom) { newTargetCameraZoom = minZoom; }
+		else if(newTargetCameraZoom < maxZoom) { newTargetCameraZoom = maxZoom; }
+		return newTargetCameraZoom;
+	}
+
 	@Override
 	public void dispose () {
 		batch.dispose();
