@@ -119,9 +119,12 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 		img = new Texture("badlogic.jpg");
 
+		System.out.println("Loading Tiles");
 		for(FileHandle _file : Gdx.files.internal("tiles/").list()) {
+			System.out.println("Loading " + _file.name());
 			tiles.add(new Tile(_file.path()));
 		}
+		System.out.println("Loaded " + tiles.size() + " tiles");
 
 		_field = new TextField("Hi", uiSkin);
 		_field.setPosition(100, 100);
