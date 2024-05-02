@@ -15,12 +15,10 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import imgui.ImGui;
 import imgui.ImGuiIO;
-import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class ChronoFloraGame extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -34,12 +32,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
 	Skin uiSkin;
 
 	OrthographicCamera camera;
-	float cameraZoomFactor = 1f;
+	float[] cameraZoomFactor = new float[] { 1f };
 
-	Map<Integer, String> tileset = Map.of(
-			0, "water",
-			1, "sand"
-	);
 	ArrayList<Tile> tiles = new ArrayList<>();
 	int tilemapBreak = 32;
 	List<Number> tilemap = List.of(   8,9,8,9,8,9,8,9,8,9,8,9,8,9,8,9, 8,9,8,9,8,9,8,9,8,9,8,9,8,9,8,9,
@@ -121,12 +115,12 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		// Control Camera Zoom
 		float zoomDelta = 0f;
 		if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-			zoomDelta = 0.02f;
+			zoomDelta = 0.2f;
 		} else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-			zoomDelta = -0.02f;
+			zoomDelta = -0.2f;
 		}
-		cameraZoomFactor -= zoomDelta * Gdx.graphics.getDeltaTime();
-		camera.zoom = cameraZoomFactor;
+		cameraZoomFactor[0] -= zoomDelta * Gdx.graphics.getDeltaTime();
+		camera.zoom = cameraZoomFactor[0];
 
 		// Clear and Setup camera projection
 		ScreenUtils.clear(1, 0, 0, 1);
@@ -166,8 +160,11 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 		// Example window
 		ImGui.begin("Hello, ImGui!");
-		ImGui.text("This is some useful text.");
-		ImGui.button("Click Me!");
+		ImGui.text(String.format("This is some useful text. %f", camera.zoom));
+//		ImGui.button("Click Me!");
+
+		ImGui.sliderFloat("Zoom", cameraZoomFactor, 0.01f, 1f);
+
 		ImGui.end();
 
 		ImGui.render();
