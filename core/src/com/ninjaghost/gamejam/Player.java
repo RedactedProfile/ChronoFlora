@@ -10,18 +10,20 @@ final public class Player {
     public boolean visible = true;
 
     private Sprite m_sprite;
-    public final Vector2 position = new Vector2();
+    public final Vector2 targetPosition = new Vector2();
+    public final Vector2 currentPosition = new Vector2();
 
     public float moveSpeed = 25f;
 
     public Player() {
-        position.set(0, 0);
+        targetPosition.set(150, 150);
+        currentPosition.set(150, 150);
         m_sprite = new Sprite(new Texture("player/idle/idle_d_00.png"));
         m_sprite.flip(false, true);
     }
 
     public void update(float delta, GameplayInputState gameplayInputState) {
-        Vector2 newPosition = new Vector2(position.x, position.y);
+        Vector2 newPosition = new Vector2(targetPosition.x, targetPosition.y);
         float normalizedMoveSpeed = moveSpeed * delta;
 
         if(gameplayInputState.up) { newPosition.y -= normalizedMoveSpeed; }
@@ -29,9 +31,10 @@ final public class Player {
         if(gameplayInputState.left) { newPosition.x -= normalizedMoveSpeed; }
         else if(gameplayInputState.right) { newPosition.x += normalizedMoveSpeed; }
 
-        position.set(newPosition.x, newPosition.y);
+        targetPosition.set(newPosition.x, newPosition.y);
 
-        m_sprite.setPosition(position.x, position.y);
+        currentPosition.lerp(targetPosition, normalizedMoveSpeed / 2);
+        m_sprite.setPosition(currentPosition.x, currentPosition.y);
     }
 
     public void draw(SpriteBatch batch) {

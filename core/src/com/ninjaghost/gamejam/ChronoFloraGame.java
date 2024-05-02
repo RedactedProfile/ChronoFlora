@@ -169,8 +169,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 //		player.render();
 		player.update(Gdx.graphics.getDeltaTime(), gameplayInputState);
-		cameraFocus[0] = player.position.x;
-		cameraFocus[1] = player.position.y;
+		cameraFocus[0] = player.targetPosition.x;
+		cameraFocus[1] = player.targetPosition.y;
 		player.draw(batch);
 
 		batch.end();
