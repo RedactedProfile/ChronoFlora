@@ -1,0 +1,19 @@
+{
+    "platform": "linux64",
+    "jdk": "openjdk-22.0.1_linux-x64_bin.tar.gz",
+    "executable": "ChronoFlora",
+    "classpath": [
+        "desktop-0.1-alpha.jar"
+    ],
+    "removelibs": [
+        "desktop-0.1-alpha.jar"
+    ],
+    "mainclass": "com.ninjaghost.gamejam.DesktopLauncher",
+    "vmargs": [
+       "-Xmx1G"
+    ],
+    "resources": [
+    ],
+    "minimizejre": "soft",
+    "output": "out-linux"
+}
