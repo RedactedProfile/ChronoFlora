@@ -28,7 +28,9 @@ final public class Player {
     private Animation<TextureRegion> frameAnimation;
     private float animationTimer = 0f;
 
-    private Map<String, Map<String, String>> animationBank;
+    private Map<String, Map<String, TextureRegion[]>> animationBank;
+    private String playerDirection = "down";
+    private String animationState = "idle";
 
     public Player() {
         targetPosition.set(150, 150);
@@ -61,8 +63,8 @@ final public class Player {
         lookAt.x = targetPosition.x + m_sprite.getWidth() / 2;
         lookAt.y = targetPosition.y + m_sprite.getHeight() / 2;
 
-        m_sprite.setRegion(frameAnimation.getKeyFrame(animationTimer, true));
-        m_sprite.flip(false, true);
+//        m_sprite.setRegion(animationBank.get(animationState).get(playerDirection).getKeyFrame(animationTimer, true));
+//        m_sprite.flip(false, true);
     }
 
     public void draw(SpriteBatch batch) {
@@ -83,10 +85,42 @@ final public class Player {
 
         animationBank = Map.of(
                 "idle", Map.of(
-                        "down", "idling down"
+                    "down", new TextureRegion[]{
+                        new TextureRegion(new Texture("player/idle/idle_d_00.png")),
+                        new TextureRegion(new Texture("player/idle/idle_d_01.png")),
+                        new TextureRegion(new Texture("player/idle/idle_d_02.png")),
+                        new TextureRegion(new Texture("player/idle/idle_d_03.png")),
+                    },
+                    "up", new TextureRegion[]{
+                        new TextureRegion(new Texture("player/idle/idle_u_00.png")),
+                        new TextureRegion(new Texture("player/idle/idle_u_01.png")),
+                        new TextureRegion(new Texture("player/idle/idle_u_02.png")),
+                        new TextureRegion(new Texture("player/idle/idle_u_03.png")),
+                    },
+                    "left", new TextureRegion[]{
+                        new TextureRegion(new Texture("player/idle/idle_l_00.png")),
+                        new TextureRegion(new Texture("player/idle/idle_l_01.png")),
+                        new TextureRegion(new Texture("player/idle/idle_l_02.png")),
+                        new TextureRegion(new Texture("player/idle/idle_l_03.png")),
+                    },
+                    "right", new TextureRegion[]{
+                        new TextureRegion(new Texture("player/idle/idle_r_00.png")),
+                        new TextureRegion(new Texture("player/idle/idle_r_01.png")),
+                        new TextureRegion(new Texture("player/idle/idle_r_02.png")),
+                        new TextureRegion(new Texture("player/idle/idle_r_03.png")),
+                    }
                 ),
                 "walk", Map.of(
-                        "down", "walking down"
+                    "down", new TextureRegion[]{},
+                    "up", new TextureRegion[]{},
+                    "left", new TextureRegion[]{},
+                    "right", new TextureRegion[]{}
+                ),
+                "attack", Map.of(
+                    "down", new TextureRegion[]{},
+                    "up", new TextureRegion[]{},
+                    "left", new TextureRegion[]{},
+                    "right", new TextureRegion[]{}
                 )
         );
 
