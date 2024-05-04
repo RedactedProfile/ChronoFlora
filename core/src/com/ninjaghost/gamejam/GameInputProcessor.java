@@ -31,6 +31,10 @@ public class GameInputProcessor implements InputProcessor {
                 System.out.println("Move right");
                 gameplayInputState.right = true;
                 break;
+            case Keys.SHIFT_LEFT:
+                System.out.println("Shift left");
+                gameplayInputState.shift = true;
+                break;
             case Keys.SPACE:
                 System.out.println("Jump");
                 gameplayInputState.action = true;
@@ -53,6 +57,9 @@ public class GameInputProcessor implements InputProcessor {
                 break;
             case Keys.D:
                 gameplayInputState.right = false;
+                break;
+            case Keys.SHIFT_LEFT:
+                gameplayInputState.shift = false;
                 break;
             case Keys.SPACE:
                 gameplayInputState.action = false;
