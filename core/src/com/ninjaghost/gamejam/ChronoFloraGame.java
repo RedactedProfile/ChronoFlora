@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.ninjaghost.gamejam.entities.Plant;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.gl3.ImGuiImplGl3;
@@ -90,6 +91,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
 	Player player;
 	GameplayInputState gameplayInputState;
 
+	ArrayList<Plant> plants = new ArrayList<>();
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -134,6 +137,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		uiStage.addActor(_field);
 
 		player = new Player();
+
+		plants.add(new Plant(100, 100));
 	}
 
 	@Override
@@ -155,6 +160,10 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 		camera.update();
 
+		// Update non-player entities
+		for(Plant p : plants) {
+			p.update(Gdx.graphics.getDeltaTime());
+		}
 
 		// Clear and Setup camera projection
 		ScreenUtils.clear(1, 0, 0, 1);
@@ -180,12 +189,15 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		// draw entities
 		batch.begin();
 
-//		player.render();
+
 		player.update(Gdx.graphics.getDeltaTime(), gameplayInputState);
 		cameraFocus[0] = player.lookAt.x;
 		cameraFocus[1] = player.lookAt.y;
 
 
+		for(Plant p : plants) {
+			p.draw(batch);
+		}
 
 		player.draw(batch);
 

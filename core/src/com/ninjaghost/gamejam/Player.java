@@ -7,14 +7,13 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-import java.util.HashMap;
 import java.util.Map;
 
 final public class Player {
 
     public boolean visible = true;
 
-    private Sprite m_sprite;
+    private final Sprite m_sprite;
     public final Vector2 targetPosition = new Vector2();
     public final Vector2 currentPosition = new Vector2();
 
@@ -109,8 +108,6 @@ final public class Player {
             animationState = "attack";
             animationLooping = false;
 
-            spriteSize = new Vector2(32, 32);
-
             activeAnimationTimer = attackTimer;
             if(playerDirection.equals("right")) {
                 flipX = true;
@@ -121,8 +118,6 @@ final public class Player {
                 centerOffsetX = -5f;
                 centerOffsetY = 3.5f;
             }
-
-
         } else {
             if(movementVelocity <= 0.05) {
                 animationState = "idle";
