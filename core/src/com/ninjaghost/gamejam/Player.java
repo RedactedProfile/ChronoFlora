@@ -100,8 +100,10 @@ final public class Player {
         float activeAnimationTimer = animationTimer;
 
 
-        TextureRegion currentFrame = animationBank.get(animationState).get(playerDirection).getKeyFrame(activeAnimationTimer, animationLooping);
-
+        boolean flipX = false;
+        boolean flipY = true;
+        float centerOffsetX = 0f;
+        float centerOffsetY = 0f;
         if(attackTimer > 0f) {
             movementVelocity = 0f;
             animationState = "attack";
@@ -109,8 +111,18 @@ final public class Player {
 
             spriteSize = new Vector2(32, 32);
 
-
             activeAnimationTimer = attackTimer;
+            if(playerDirection.equals("right")) {
+                flipX = true;
+            } else if(playerDirection.equals("up")) {
+                centerOffsetX = 3f;
+                centerOffsetY = -2f;
+            } else if(playerDirection.equals("down")) {
+                centerOffsetX = -5f;
+                centerOffsetY = 3.5f;
+            }
+
+
         } else {
             if(movementVelocity <= 0.05) {
                 animationState = "idle";
@@ -125,10 +137,12 @@ final public class Player {
             }
         }
 
+        TextureRegion currentFrame = animationBank.get(animationState).get(playerDirection).getKeyFrame(activeAnimationTimer, animationLooping);
+
         m_sprite.setSize(currentFrame.getRegionWidth(), currentFrame.getRegionHeight());
-        m_sprite.setCenter(currentPosition.x, currentPosition.y);
+        m_sprite.setCenter(currentPosition.x + centerOffsetX, currentPosition.y + centerOffsetY);
         m_sprite.setRegion(currentFrame);
-        m_sprite.flip(false, true);
+        m_sprite.flip(flipX, flipY);
     }
 
     public void draw(SpriteBatch batch) {
