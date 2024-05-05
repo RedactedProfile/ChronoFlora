@@ -23,8 +23,6 @@ final public class Player {
     public float moveSpeed = 25f;
     public float movementVelocity = 0f;
 
-
-    private TextureRegion[] frames = new TextureRegion[4];
     private Animation<TextureRegion> frameAnimation;
     private float animationTimer = 0f;
 
@@ -34,7 +32,7 @@ final public class Player {
     private boolean animationLooping = true;
 
     private float attackTimer = 0f;
-    private float attackTimerMax = 1f;
+    private float attackTimerMax = 0.25f;
 
     public Player() {
         targetPosition.set(150, 150);
@@ -50,9 +48,14 @@ final public class Player {
     public void update(float delta, GameplayInputState gameplayInputState) {
         animationTimer += delta;
 
+        // reset sprite size to default for camera calculations
+        Vector2 spriteSize = new Vector2(16, 16);
+
+        m_sprite.setSize(spriteSize.x, spriteSize.y);
+
         if(gameplayInputState.action && attackTimer <= 0f) {
             gameplayInputState.action = false;
-            attackTimer += delta;
+            attackTimer = 0.001f;
             animationState = "attack";
         }
         if(attackTimer >= attackTimerMax) {
@@ -96,10 +99,17 @@ final public class Player {
 
         float activeAnimationTimer = animationTimer;
 
+
+        TextureRegion currentFrame = animationBank.get(animationState).get(playerDirection).getKeyFrame(activeAnimationTimer, animationLooping);
+
         if(attackTimer > 0f) {
             movementVelocity = 0f;
             animationState = "attack";
             animationLooping = false;
+
+            spriteSize = new Vector2(32, 32);
+
+
             activeAnimationTimer = attackTimer;
         } else {
             if(movementVelocity <= 0.05) {
@@ -115,7 +125,9 @@ final public class Player {
             }
         }
 
-        m_sprite.setRegion(animationBank.get(animationState).get(playerDirection).getKeyFrame(activeAnimationTimer, animationLooping));
+        m_sprite.setSize(currentFrame.getRegionWidth(), currentFrame.getRegionHeight());
+        m_sprite.setCenter(currentPosition.x, currentPosition.y);
+        m_sprite.setRegion(currentFrame);
         m_sprite.flip(false, true);
     }
 
@@ -233,5 +245,7 @@ final public class Player {
                 })
             )
         );
+
+
     }
 }
