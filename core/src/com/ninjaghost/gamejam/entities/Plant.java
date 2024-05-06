@@ -3,6 +3,7 @@ package com.ninjaghost.gamejam.entities;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Plant {
@@ -21,11 +22,22 @@ public class Plant {
     }
 
     public void update(float delta) {
-
+        if(m_sprite == null) return;
+        
     }
 
     public void draw(SpriteBatch batch) {
+        if(m_sprite == null) return;
+
         m_sprite.draw(batch);
+    }
+
+    public void checkCollision(Rectangle collider) {
+        if(m_sprite == null) return;
+
+        if(collider.overlaps(m_sprite.getBoundingRectangle())) {
+            m_sprite = null;
+        }
     }
 
 }

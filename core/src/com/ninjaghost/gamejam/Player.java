@@ -34,7 +34,7 @@ final public class Player {
     private float attackTimer = 0f;
     private float attackTimerMax = 0.25f;
 
-    private Rectangle attackCollisionBounds = null;
+    public Rectangle attackCollisionBounds = null;
 
     public Player() {
         targetPosition.set(150, 150);

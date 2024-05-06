@@ -145,6 +145,11 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		shapeRenderer = new ShapeRenderer();
 		player = new Player();
 		plants.add(new Plant(100, 100));
+		plants.add(new Plant(116, 100));
+		plants.add(new Plant(132, 100));
+		plants.add(new Plant(164, 100));
+		plants.add(new Plant(100, 116));
+		plants.add(new Plant(100, 132));
 	}
 
 	@Override
@@ -194,13 +199,26 @@ public class ChronoFloraGame extends ApplicationAdapter {
         }
 		batch.end();
 
+		// Update/think routines
+		player.update(Gdx.graphics.getDeltaTime(), gameplayInputState);
+		cameraFocus[0] = player.lookAt.x;
+		cameraFocus[1] = player.lookAt.y;
+		for(Plant p : plants) {
+			p.update(Gdx.graphics.getDeltaTime());
+		}
+		if(player.attackCollisionBounds != null) {
+			// Run through all attackable entities to check the bounding box
+
+			for(Plant p : plants) {
+				p.checkCollision(player.attackCollisionBounds);
+			}
+		}
+
+
 		// draw entities
 		batch.begin();
 
 
-		player.update(Gdx.graphics.getDeltaTime(), gameplayInputState);
-		cameraFocus[0] = player.lookAt.x;
-		cameraFocus[1] = player.lookAt.y;
 
 
 		for(Plant p : plants) {
@@ -212,6 +230,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		batch.end();
 
 
+		// Let's show the bounding boxes of invisible bounding boxes
 		if(GameSettingsState.showCollisionBoxes && !rectanglesToRender.isEmpty()) {
 			shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
 			shapeRenderer.setProjectionMatrix(camera.combined);
