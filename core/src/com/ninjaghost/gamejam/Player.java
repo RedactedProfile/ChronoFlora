@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 
 import java.util.Map;
@@ -32,6 +33,8 @@ final public class Player {
 
     private float attackTimer = 0f;
     private float attackTimerMax = 0.25f;
+
+    private Rectangle attackCollisionBounds = null;
 
     public Player() {
         targetPosition.set(150, 150);
@@ -138,10 +141,69 @@ final public class Player {
         m_sprite.setCenter(currentPosition.x + centerOffsetX, currentPosition.y + centerOffsetY);
         m_sprite.setRegion(currentFrame);
         m_sprite.flip(flipX, flipY);
+
+
+
+        // Collision bounds
+        attackCollisionBounds = null;
+        if(attackTimer > 0f) {
+            attackCollisionBounds = new Rectangle();
+            Vector2 attackCollisionBoundsSize = new Vector2(16, 16);
+            Vector2 attackCollisionBoundsOffset = new Vector2(0, 0);
+            if (playerDirection.equals("down")) {
+                // These are normalized values for when we're _not_ attacking
+                // However because the attack sprites are different sizes, they knock the
+                // collision box away by significant amounts and it's different each direction and keyFrame
+                attackCollisionBoundsSize.y = 8;
+                attackCollisionBoundsOffset.y += 16f;
+
+                // here are the adjusted values for this direction, per frame
+                attackCollisionBoundsOffset.x += 5f;
+                attackCollisionBoundsOffset.y += 3f;
+            } else if (playerDirection.equals("up")) {
+                // These are normalized values for when we're _not_ attacking
+                // However because the attack sprites are different sizes, they knock the
+                // collision box away by significant amounts and it's different each direction and keyFrame
+                attackCollisionBoundsSize.y = 8;
+                attackCollisionBoundsOffset.y -= 8f;
+
+                // here are the adjusted values for this direction, per frame
+                attackCollisionBoundsOffset.x += 8f;
+                attackCollisionBoundsOffset.y += 5f;
+            } else if (playerDirection.equals("left")) {
+                // These are normalized values for when we're _not_ attacking
+                // However because the attack sprites are different sizes, they knock the
+                // collision box away by significant amounts and it's different each direction and keyFrame
+                attackCollisionBoundsSize.x = 8;
+                attackCollisionBoundsOffset.x -= 8f;
+
+                // here are the adjusted values for this direction, per frame
+                attackCollisionBoundsOffset.x += 24f;
+                attackCollisionBoundsOffset.y += 24f;
+            } else if (playerDirection.equals("right")) {
+                // These are normalized values for when we're _not_ attacking
+                // However because the attack sprites are different sizes, they knock the
+                // collision box away by significant amounts and it's different each direction and keyFrame
+                attackCollisionBoundsSize.x = 8;
+                attackCollisionBoundsOffset.x += 16f;
+
+                // here are the adjusted values for this direction, per frame
+                attackCollisionBoundsOffset.x += 24f;
+                attackCollisionBoundsOffset.y += 24f;
+            }
+            attackCollisionBounds.setSize(attackCollisionBoundsSize.x, attackCollisionBoundsSize.y);
+            attackCollisionBounds.setPosition(
+                    (currentPosition.x - m_sprite.getWidth() / 2) + attackCollisionBoundsOffset.x,
+                    (currentPosition.y - m_sprite.getHeight() / 2) + attackCollisionBoundsOffset.y);
+        }
     }
 
     public void draw(SpriteBatch batch) {
         m_sprite.draw(batch);
+
+        if(GameSettingsState.showCollisionBoxes && attackCollisionBounds != null) {
+            GameSettingsState.gameInstance.rectanglesToRender.add(attackCollisionBounds);
+        }
     }
 
     private void load() {

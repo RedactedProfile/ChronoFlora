@@ -10,6 +10,8 @@ public class Plant {
     private Sprite m_sprite;
     private Vector2 m_position;
 
+    public String tag = "plant";
+
     public Plant(int x, int y) {
         m_sprite = new Sprite(new Texture("plants/001.png"));
         m_sprite.setSize(16, 16);

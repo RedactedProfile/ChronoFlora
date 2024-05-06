@@ -4,12 +4,14 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -93,8 +95,12 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 	ArrayList<Plant> plants = new ArrayList<>();
 
+	ShapeRenderer shapeRenderer;
+	ArrayList<Rectangle> rectanglesToRender = new ArrayList<>();
+
 	@Override
 	public void create () {
+		GameSettingsState.gameInstance = this;
 		batch = new SpriteBatch();
 		bitmapFont = new BitmapFont();
 		uiStage = new Stage(new ScreenViewport());
@@ -136,13 +142,15 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		_field.setSize(200, 50);
 		uiStage.addActor(_field);
 
+		shapeRenderer = new ShapeRenderer();
 		player = new Player();
-
 		plants.add(new Plant(100, 100));
 	}
 
 	@Override
 	public void render () {
+		rectanglesToRender.clear();
+
 		if(Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) {
 			showImGui = !showImGui;
 		}
@@ -202,6 +210,19 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		player.draw(batch);
 
 		batch.end();
+
+
+		if(GameSettingsState.showCollisionBoxes && !rectanglesToRender.isEmpty()) {
+			shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+			shapeRenderer.setProjectionMatrix(camera.combined);
+			shapeRenderer.setColor(Color.RED);
+
+			for(Rectangle r : rectanglesToRender) {
+				shapeRenderer.rect(r.x, r.y, r.width, r.height);
+			}
+
+			shapeRenderer.end();
+		}
 
 
 		// Render the UI
