@@ -15,6 +15,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -87,7 +88,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 	// UI Widgets
 	// Draw the UI
-	TextField _field;
+//	TextField _field;
+	ArrayList<TextField> _fields;
 
 
 	Player player;
@@ -137,10 +139,10 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		}
 		System.out.println("Loaded " + tiles.size() + " tiles");
 
-		_field = new TextField("Hi", uiSkin);
-		_field.setPosition(100, 100);
-		_field.setSize(200, 50);
-		uiStage.addActor(_field);
+		TextArea _field2 = new TextArea("Hi.\n\nW/A/S/D = Move around\nSpace = Attack", uiSkin);
+		_field2.setPosition(  0, 0);
+		_field2.setSize(200, 100);
+		uiStage.addActor(_field2);
 
 		shapeRenderer = new ShapeRenderer();
 		player = new Player();
