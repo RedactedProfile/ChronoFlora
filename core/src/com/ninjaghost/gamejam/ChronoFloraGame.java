@@ -20,6 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ninjaghost.gamejam.entities.Plant;
+import com.ninjaghost.gamejam.entities.PlantItem;
 import imgui.ImGui;
 import imgui.ImGuiIO;
 import imgui.ImVec2;
@@ -135,6 +136,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
 	GameplayInputState gameplayInputState;
 
 	ArrayList<Plant> plants = new ArrayList<>();
+	ArrayList<PlantItem> plantItems = new ArrayList<>();
 
 	ShapeRenderer shapeRenderer;
 	ArrayList<Rectangle> rectanglesToRender = new ArrayList<>();
@@ -268,6 +270,9 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		for(Plant p : plants) {
 			p.update(Gdx.graphics.getDeltaTime());
 		}
+		for(PlantItem pl : plantItems) {
+			pl.update(Gdx.graphics.getDeltaTime());
+		}
 		if(player.attackCollisionBounds != null) {
 			// Run through all attackable entities to check the bounding box
 
@@ -281,10 +286,11 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		batch.begin();
 
 
-
-
 		for(Plant p : plants) {
 			p.draw(batch);
+		}
+		for(PlantItem pl : plantItems) {
+			pl.draw(batch);
 		}
 
 		player.draw(batch);
@@ -354,6 +360,13 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		ImGui.end();
 		ImGui.render();
 		imGuiImplGl3.renderDrawData(ImGui.getDrawData());
+	}
+
+
+	public void spawnPlantItem(Plant from) {
+		PlantItem newPlantItem = new PlantItem((int) from.getPosition().x, (int)from.getPosition().y);
+		newPlantItem.spawnItem();
+		plantItems.add(newPlantItem);
 	}
 
 	private float getNewTargetCameraZoom() {

@@ -5,11 +5,13 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.ninjaghost.gamejam.GameSettingsState;
 
 public class Plant {
 
     private Sprite m_sprite;
     private Vector2 m_position;
+    boolean isCut = false;
 
     public String tag = "plant";
 
@@ -21,9 +23,13 @@ public class Plant {
         m_sprite.setFlip(false, true);
     }
 
+    public Vector2 getPosition() {
+        return m_position;
+    }
+
     public void update(float delta) {
         if(m_sprite == null) return;
-        
+
     }
 
     public void draw(SpriteBatch batch) {
@@ -33,11 +39,21 @@ public class Plant {
     }
 
     public void checkCollision(Rectangle collider) {
-        if(m_sprite == null) return;
+        if(m_sprite == null || isCut) return;
 
         if(collider.overlaps(m_sprite.getBoundingRectangle())) {
-            m_sprite = null;
+            doHit();
+            GameSettingsState.gameInstance.spawnPlantItem(this);
         }
+    }
+
+    private void doHit() {
+        isCut = true;
+        m_sprite.setTexture(new Texture("plants/001_cut.png"));
+        m_sprite.setSize(8, 8);
+        m_position = new Vector2(m_position.x + 8f, m_position.y + 4f);
+        m_sprite.setPosition(m_position.x, m_position.y);
+        m_sprite.setFlip(false, true);
     }
 
 }
