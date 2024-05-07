@@ -16,18 +16,22 @@ public class GameInputProcessor implements InputProcessor {
     public boolean keyDown(int keycode) {
         switch (keycode) {
             case Keys.W:
+            case Keys.UP:
                 System.out.println("Move forward");
                 gameplayInputState.up = true;
                 break;
             case Keys.S:
+            case Keys.DOWN:
                 System.out.println("Move backward");
                 gameplayInputState.down = true;
                 break;
             case Keys.A:
+            case Keys.LEFT:
                 System.out.println("Move left");
                 gameplayInputState.left = true;
                 break;
             case Keys.D:
+            case Keys.RIGHT:
                 System.out.println("Move right");
                 gameplayInputState.right = true;
                 break;
@@ -47,15 +51,19 @@ public class GameInputProcessor implements InputProcessor {
     public boolean keyUp(int keycode) {
         switch (keycode) {
             case Keys.W:
+            case Keys.UP:
                 gameplayInputState.up = false;
                 break;
             case Keys.S:
+            case Keys.DOWN:
                 gameplayInputState.down = false;
                 break;
             case Keys.A:
+            case Keys.LEFT:
                 gameplayInputState.left = false;
                 break;
             case Keys.D:
+            case Keys.RIGHT:
                 gameplayInputState.right = false;
                 break;
             case Keys.SHIFT_LEFT:
