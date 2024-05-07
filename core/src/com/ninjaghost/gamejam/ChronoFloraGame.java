@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class ChronoFloraGame extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -201,7 +202,21 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		rectanglesToRender.clear();
+
+		// this was used to test the FPS graph
+//		Random rnd = new Random();
+//		int rndMin = 1;
+//		int rndMax = 500;
+//		if(rnd.nextInt(rndMax) < 50) {
+//			try {
+//				Thread.sleep(rnd.nextInt(rndMax - rndMin) + rndMin);
+//			} catch (InterruptedException e) {
+//				throw new RuntimeException(e);
+//			}
+//		}
+
+
+        rectanglesToRender.clear();
 
 		if(Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) {
 			showImGui = !showImGui;
