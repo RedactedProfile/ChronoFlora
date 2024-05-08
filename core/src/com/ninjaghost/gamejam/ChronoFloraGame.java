@@ -204,6 +204,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		uiStage.addActor(_field2);
 
 		_panel = new Table(uiSkin);
+		_panel.debugAll();
 		_panel.setSize(450, 50);
 		_panel.setPosition(((float) Gdx.graphics.getWidth() / 2) - _panel.getWidth() / 2, 0);
 		_panel.setBackground(new TextureRegionDrawable(new TextureRegion( new Texture("ui/inv_bg.png") )));
