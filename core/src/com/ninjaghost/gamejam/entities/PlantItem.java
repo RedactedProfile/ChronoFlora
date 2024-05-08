@@ -52,8 +52,13 @@ public class PlantItem {
         return stackCount;
     }
 
+    public Sprite getSprite() {
+        return m_sprite;
+    }
+
     public void spawnItem() {
         m_mode = MODE.INVENTORY;
+        m_sprite.setSize(32, -32);
     }
 
     public void spawnCollectable() {
@@ -62,6 +67,7 @@ public class PlantItem {
         visible = true;
 
         m_position = new Vector2(m_sprite.getX() - 5f, m_sprite.getY() - 5f);
+        m_sprite.setSize(8, 8);
         m_sprite.setPosition(m_position.x, m_position.y);
     }
 

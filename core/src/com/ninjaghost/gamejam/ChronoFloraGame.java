@@ -9,12 +9,14 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -132,6 +134,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 	// UI Widgets
 	ArrayList<TextField> _fields;
+	TextArea _field2;
+	Table _panel;
 
 	// Playable NPC Object
 	Player player;
@@ -194,15 +198,15 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		}
 		System.out.println("Loaded " + tiles.size() + " tiles");
 
-		TextArea _field2 = new TextArea("Controls:\nW/A/S/D = Move around\nShift (hold) = Run\nSpace = Attack", uiSkin);
+		_field2 = new TextArea("Controls:\nW/A/S/D = Move around\nShift (hold) = Run\nSpace = Attack", uiSkin);
 		_field2.setSize(200, 100);
 		_field2.setPosition(  0, Gdx.graphics.getHeight() - _field2.getHeight());
 		uiStage.addActor(_field2);
 
-		Table _panel = new Table(uiSkin);
+		_panel = new Table(uiSkin);
 		_panel.setSize(450, 50);
 		_panel.setPosition(((float) Gdx.graphics.getWidth() / 2) - _panel.getWidth() / 2, 0);
-		_panel.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("badlogic.jpg")))));
+		_panel.setBackground(new TextureRegionDrawable(new TextureRegion( new Texture("ui/inv_bg.png") )));
 		uiStage.addActor(_panel);
 
 		shapeRenderer = new ShapeRenderer();
@@ -339,6 +343,15 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 
 		// Render the UI
+
+		_panel.clearChildren();
+		for(PlantItem pl : playerInventory) {
+			SpriteActor _actor = new SpriteActor(pl.getSprite());
+			_actor.setColor(Color.BLUE);
+			_actor.setPosition(0, 0);
+			_panel.add(_actor);
+		}
+
 		uiStage.act(Gdx.graphics.getDeltaTime());
 		uiStage.draw();
 
