@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -29,6 +30,7 @@ import imgui.type.ImFloat;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -142,6 +144,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
 	ShapeRenderer shapeRenderer;
 	ArrayList<Rectangle> rectanglesToRender = new ArrayList<>();
 
+	HashMap<String, Sound> sounds = new HashMap<>();
+
 	@Override
 	public void create () {
 		GameSettingsState.gameInstance = this;
@@ -188,6 +192,10 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 		shapeRenderer = new ShapeRenderer();
 		player = new Player();
+
+		// Load common sounds
+		sounds.put("collect", Gdx.audio.newSound(Gdx.files.internal("sfx/pop.mp3")));
+
 
 		// Generate Islands
 
@@ -377,6 +385,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
 	public void doCollectItem(PlantItem plantItem) {
 		// remove from rotation
 		plantItemsForDeletion.add(plantItem);
+
+		sounds.get("collect").play();
 
 		// add to inventory
 
