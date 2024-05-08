@@ -18,11 +18,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ninjaghost.gamejam.entities.Plant;
@@ -204,7 +202,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		uiStage.addActor(_field2);
 
 		_panel = new Table(uiSkin);
-		_panel.debugAll();
+//		_panel.debugAll();
+		_panel.defaults().align(Align.left);
 		_panel.setSize(450, 50);
 		_panel.setPosition(((float) Gdx.graphics.getWidth() / 2) - _panel.getWidth() / 2, 0);
 		_panel.setBackground(new TextureRegionDrawable(new TextureRegion( new Texture("ui/inv_bg.png") )));
@@ -346,13 +345,17 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		// Render the UI
 
 		_panel.clearChildren();
+		_panel.align(Align.left);
+		int _invItems = 0;
+		float _invInitialOffset = 45f;
 		for(PlantItem pl : playerInventory) {
 			SpriteActor _actor = new SpriteActor(pl.getSprite());
-			_actor.setColor(Color.BLUE);
-			_actor.setPosition(0, 0);
-			_panel.add(_actor);
+			float toPad = 35f * _invItems;
+			// initial one is special
+			if(_invItems == 0) { toPad += _invInitialOffset; }
+			_panel.add(_actor).padLeft(toPad);
+			_invItems++;
 		}
-
 		uiStage.act(Gdx.graphics.getDeltaTime());
 		uiStage.draw();
 
