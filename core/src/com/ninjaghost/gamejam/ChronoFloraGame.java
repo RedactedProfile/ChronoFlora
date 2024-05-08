@@ -24,7 +24,6 @@ import com.ninjaghost.gamejam.entities.Plant;
 import com.ninjaghost.gamejam.entities.PlantItem;
 import imgui.ImGui;
 import imgui.ImGuiIO;
-import imgui.ImVec2;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.type.ImFloat;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +31,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ChronoFloraGame extends ApplicationAdapter {
@@ -130,21 +128,28 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		);
 
 	// UI Widgets
-	// Draw the UI
-//	TextField _field;
 	ArrayList<TextField> _fields;
 
-
+	// Playable NPC Object
 	Player player;
+
+	// Inventory
+	ArrayList<PlantItem> playerInventory = new ArrayList<>();
+	int playerInventoryStackMax = 6;
+
+	// Controller
 	GameplayInputState gameplayInputState;
 
+	// Flora related stuff
 	ArrayList<Plant> plants = new ArrayList<>();
 	ArrayList<PlantItem> plantItems = new ArrayList<>();
 	ArrayList<PlantItem> plantItemsForDeletion = new ArrayList<>();
 
+	// Shape Rendering (Usually debug stuff)
 	ShapeRenderer shapeRenderer;
 	ArrayList<Rectangle> rectanglesToRender = new ArrayList<>();
 
+	// Audio Related Stuff
 	HashMap<String, Sound> sounds = new HashMap<>();
 
 	@Override
@@ -364,6 +369,12 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		for(int i = 0; i < fpsHistory.size(); i++) { data[i] = fpsHistory.get(i).floatValue(); }
 		ImGui.plotLines("Framerate", data, data.length, 0, "", 0, 60, 400, 100, 4);
 
+		ImGui.text("Player");
+		ImGui.text("- Inventory");
+		for (PlantItem plant : playerInventory) {
+			ImGui.text(plant.tag + ": " + plant.getStackCount());
+		}
+
 //		ImGui.text(String.format("player vel: %f", player.movementVelocity));
 		ImGui.text("Camera Settings");
 		ImGui.inputFloat2("Focus", cameraFocus);
@@ -377,11 +388,26 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 	public void spawnPlantItem(Plant from) {
 		PlantItem newPlantItem = new PlantItem((int) from.getPosition().x, (int)from.getPosition().y);
-		newPlantItem.spawnItem();
+		newPlantItem.spawnCollectable();
 		plantItems.add(newPlantItem);
 	}
 
+	public boolean playerCanCollect(PlantItem plantItem) {
+		// check if inventory stack count is maxed
+		if(playerInventory.size() < playerInventoryStackMax) {
+			return true;
+		}
 
+		// if so, check if there's an available stack
+		for(PlantItem pl : playerInventory) {
+			if(pl.tag.equals(plantItem.tag) && pl.canStack()) {
+				return true;
+			}
+		}
+
+		// all else fails, don't collect
+		return false;
+	}
 
 	public void doCollectItem(PlantItem plantItem) {
 		// remove from rotation
@@ -391,12 +417,24 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		// Randomize the volume and pitch
 //		Random random = new Random();
 		float pitch = ThreadLocalRandom.current().nextFloat(0.5f, 1.5f);
-		sounds.get("collect").play(1f, pitch, 0f);
+		sounds.get("collect").play(0.4f, pitch, 0f);
 
 		// add to inventory
 
-		// cleanup
-//		plantItem = null; // mark for deletion
+		// check if a stack of this item already exists in inventory and has available stack
+		boolean stacked = false;
+		for(PlantItem pl : playerInventory) {
+			if(pl.tag.equals(plantItem.tag) && pl.canStack()) {
+				pl.addStack();
+				stacked = true;
+			}
+		}
+		if(!stacked) {
+			PlantItem _new = new PlantItem(0,0);
+			_new.spawnItem();
+			_new.addStack();
+			playerInventory.add(_new);
+		}
 	}
 
 	public Player getPlayer() {

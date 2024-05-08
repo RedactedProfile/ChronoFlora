@@ -14,7 +14,6 @@ public class PlantItem {
     MODE m_mode = MODE.INVENTORY;
 
     boolean visible = true;
-    boolean isCollectable = false;
     boolean isSpawnAnimationDone = false;
 
     private Sprite m_sprite;
@@ -22,6 +21,12 @@ public class PlantItem {
 
     public String tag = "item";
 
+    // Inventory Mode stuff
+    public int stackCount = 0;
+    public int stackCountMax = 20;
+
+    // Collectable Item Mode Stuff
+    boolean isCollectable = false;
     float isCollectableTimer = 0f;
     float getIsCollectableTimerMax = 1f;
 
@@ -35,11 +40,26 @@ public class PlantItem {
         visible = false;
     }
 
+    public boolean canStack() {
+        return stackCount < stackCountMax;
+    }
+
+    public void addStack() {
+        stackCount++;
+    }
+
+    public int getStackCount() {
+        return stackCount;
+    }
+
     public void spawnItem() {
+        m_mode = MODE.INVENTORY;
+    }
+
+    public void spawnCollectable() {
         if(m_sprite == null) return;
         m_mode = MODE.COLLECTABLE;
         visible = true;
-
 
         m_position = new Vector2(m_sprite.getX() - 5f, m_sprite.getY() - 5f);
         m_sprite.setPosition(m_position.x, m_position.y);
@@ -72,15 +92,17 @@ public class PlantItem {
             m_position.y = m_position.y + newY;
             m_sprite.setPosition(m_position.x, m_position.y);
 
-            // this is the area where we magnetize toward the player if they're close enough
-            if(GameSettingsState.gameInstance.getPlayer().currentPosition.dst(m_position) <= 25f) {
-                m_position.lerp(GameSettingsState.gameInstance.getPlayer().currentPosition, 5f * delta);
-                m_sprite.setPosition(m_position.x, m_position.y);
-            }
+            if(GameSettingsState.gameInstance.playerCanCollect(this)) {
+                // this is the area where we magnetize toward the player if they're close enough
+                if(GameSettingsState.gameInstance.getPlayer().currentPosition.dst(m_position) <= 25f) {
+                    m_position.lerp(GameSettingsState.gameInstance.getPlayer().currentPosition, 5f * delta);
+                    m_sprite.setPosition(m_position.x, m_position.y);
+                }
 
-            if(GameSettingsState.gameInstance.getPlayer().getSprite().getBoundingRectangle().overlaps(m_sprite.getBoundingRectangle())) {
-                // do collection, wipe this instance clean
-                GameSettingsState.gameInstance.doCollectItem(this);
+                if(GameSettingsState.gameInstance.getPlayer().getSprite().getBoundingRectangle().overlaps(m_sprite.getBoundingRectangle())) {
+                    // do collection, wipe this instance clean
+                    GameSettingsState.gameInstance.doCollectItem(this);
+                }
             }
         }
     }
