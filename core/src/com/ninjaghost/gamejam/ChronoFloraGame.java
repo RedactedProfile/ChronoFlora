@@ -137,6 +137,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 	ArrayList<Plant> plants = new ArrayList<>();
 	ArrayList<PlantItem> plantItems = new ArrayList<>();
+	ArrayList<PlantItem> plantItemsForDeletion = new ArrayList<>();
 
 	ShapeRenderer shapeRenderer;
 	ArrayList<Rectangle> rectanglesToRender = new ArrayList<>();
@@ -217,6 +218,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
 //			}
 //		}
 
+		// remove things out of circulation
+		cleanupThingsForDeletion();
 
         rectanglesToRender.clear();
 
@@ -367,6 +370,29 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		PlantItem newPlantItem = new PlantItem((int) from.getPosition().x, (int)from.getPosition().y);
 		newPlantItem.spawnItem();
 		plantItems.add(newPlantItem);
+	}
+
+
+
+	public void doCollectItem(PlantItem plantItem) {
+		// remove from rotation
+		plantItemsForDeletion.add(plantItem);
+
+		// add to inventory
+
+		// cleanup
+//		plantItem = null; // mark for deletion
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+
+	private void cleanupThingsForDeletion() {
+		for(PlantItem pl : plantItemsForDeletion) {
+			plantItems.remove(pl);
+		}
 	}
 
 	private float getNewTargetCameraZoom() {

@@ -206,6 +206,10 @@ final public class Player {
         }
     }
 
+    public Sprite getSprite() {
+        return m_sprite;
+    }
+
     private void load() {
 
         float frIdle = 0.5f;

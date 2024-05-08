@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.ninjaghost.gamejam.GameSettingsState;
 
 public class PlantItem {
 
@@ -65,13 +66,22 @@ public class PlantItem {
         }
 
         if(isCollectable) {
-            // this is the area where we magnetize toward the player if they're close enough
-
             // animate with a bouncing effect
             isCollectableTimer += delta; // this is for the purposes of the bounce effect
             float newY = MathUtils.sin(MathUtils.PI2 * 0.9f * isCollectableTimer) * 0.1f;
             m_position.y = m_position.y + newY;
             m_sprite.setPosition(m_position.x, m_position.y);
+
+            // this is the area where we magnetize toward the player if they're close enough
+            if(GameSettingsState.gameInstance.getPlayer().currentPosition.dst(m_position) <= 25f) {
+                m_position.lerp(GameSettingsState.gameInstance.getPlayer().currentPosition, 5f * delta);
+                m_sprite.setPosition(m_position.x, m_position.y);
+            }
+
+            if(GameSettingsState.gameInstance.getPlayer().getSprite().getBoundingRectangle().overlaps(m_sprite.getBoundingRectangle())) {
+                // do collection, wipe this instance clean
+                GameSettingsState.gameInstance.doCollectItem(this);
+            }
         }
     }
 
