@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class ChronoFloraGame extends ApplicationAdapter {
 	SpriteBatch batch;
@@ -386,7 +387,11 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		// remove from rotation
 		plantItemsForDeletion.add(plantItem);
 
-		sounds.get("collect").play();
+
+		// Randomize the volume and pitch
+//		Random random = new Random();
+		float pitch = ThreadLocalRandom.current().nextFloat(0.5f, 1.5f);
+		sounds.get("collect").play(1f, pitch, 0f);
 
 		// add to inventory
 
@@ -419,6 +424,16 @@ public class ChronoFloraGame extends ApplicationAdapter {
 	public void dispose () {
 		batch.dispose();
 		img.dispose();
+//		player.dispose();
+		for(PlantItem pl : plantItems) {
+//			pl.dispose();
+		}
+		for(Plant p : plants) {
+//			p.dispose();
+		}
+		for(Sound sound : sounds.values()) {
+			sound.dispose();
+		}
 	}
 
 	@Override
