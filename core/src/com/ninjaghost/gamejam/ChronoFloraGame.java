@@ -10,14 +10,17 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ninjaghost.gamejam.entities.Plant;
@@ -192,9 +195,15 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		System.out.println("Loaded " + tiles.size() + " tiles");
 
 		TextArea _field2 = new TextArea("Controls:\nW/A/S/D = Move around\nShift (hold) = Run\nSpace = Attack", uiSkin);
-		_field2.setPosition(  0, 0);
 		_field2.setSize(200, 100);
+		_field2.setPosition(  0, Gdx.graphics.getHeight() - _field2.getHeight());
 		uiStage.addActor(_field2);
+
+		Table _panel = new Table(uiSkin);
+		_panel.setSize(450, 50);
+		_panel.setPosition(((float) Gdx.graphics.getWidth() / 2) - _panel.getWidth() / 2, 0);
+		_panel.setBackground(new TextureRegionDrawable(new TextureRegion(new Texture(Gdx.files.internal("badlogic.jpg")))));
+		uiStage.addActor(_panel);
 
 		shapeRenderer = new ShapeRenderer();
 		player = new Player();
