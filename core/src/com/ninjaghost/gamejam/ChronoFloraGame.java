@@ -49,8 +49,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
 	Skin uiSkin;
 
 	OrthographicCamera camera;
-	float maxZoom = 0.3f;
-	float minZoom = 0.5f;
+	float maxZoom = 0.2f;
+	float minZoom = 0.3f;
 	float[] cameraTargetZoomFactor = new float[] { maxZoom };
 	float[] calculatedZoomFactor = new float[] { minZoom };
 	float zoomSpeed = 1f;

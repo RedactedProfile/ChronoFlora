@@ -8,8 +8,10 @@ import com.ninjaghost.gamejam.ChronoFloraGame;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+		config.useVsync(true);
 		config.setForegroundFPS(60);
 		config.setTitle("ChronoFlora");
+		config.setWindowedMode(1280, 720);
 		new Lwjgl3Application(new ChronoFloraGame(), config);
 	}
 }
