@@ -7,6 +7,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.ninjaghost.gamejam.GameSettingsState;
+import imgui.ImGui;
 
 public class PlantItem {
 
@@ -27,9 +28,15 @@ public class PlantItem {
 
     // Collectable Item Mode Stuff
     boolean isCollectable = false;
-    Vector2 collectableTargetPosition = new Vector2();
+    float gravityVelocityFactor = 980f;
+    float gravityVelocity = 0f;
     float isCollectableTimer = 0f;
-    float getIsCollectableTimerMax = 1f;
+    float animationTimer = 0f;
+    float getIsCollectableTimerMax = 0.8f;
+    float animationTimerMax = 0.8f;
+
+    float[] gui_gravityVelocityFactor = new float[]{ 980f };
+    float[] gui_gravityVelocity = new float[]{ 0f };
 
     public PlantItem(int x, int y) {
         m_sprite = new Sprite(new Texture("plants/001_item.png"));
@@ -68,7 +75,7 @@ public class PlantItem {
         m_mode = MODE.COLLECTABLE;
         visible = true;
 
-        collectableTargetPosition = new Vector2(m_sprite.getX() - 5f, m_sprite.getY() - 5f);
+//        collectableTargetPosition = new Vector2(m_sprite.getX() - 5f, m_sprite.getY() - 5f);
         m_sprite.setSize(8, 8);
         m_sprite.setPosition(m_position.x, m_position.y);
     }
@@ -79,21 +86,42 @@ public class PlantItem {
         if(!isCollectable && m_mode == MODE.COLLECTABLE && isCollectableTimer < getIsCollectableTimerMax) {
             // item is a collectable item but we aren't quite collectable yet
             isCollectableTimer += delta;
+//            animationTimer += delta;
+
+
         }
 
         if(!isCollectable && m_mode == MODE.COLLECTABLE && !isSpawnAnimationDone) {
+            boolean start = false;
+            if(animationTimer <= 0f) {
+                start = true;
+                // starting out we want a solid set for velocity
+                gravityVelocity = GameSettingsState.itemJumpFactor[0];
+            }
+
             // do the next frame of the bounce animation here
+            animationTimer += delta;
 
             // we're going to do a kind of bounce effect from the location registered
             // but for now let's just put it in the "spot" it's going to wind up at
-            m_position.x = collectableTargetPosition.x;
-            m_position.y = collectableTargetPosition.y;
-            m_sprite.setPosition(collectableTargetPosition.x, collectableTargetPosition.y);
+
+            if(!start) {
+                gravityVelocity += -GameSettingsState.itemGravityFactor[0] * delta;
+            }
+//            m_position.x += 2f * delta;
+            m_position.y += gravityVelocity * delta;
+            m_sprite.setPosition(m_position.x, m_position.y);
+        }
+
+        if(!isSpawnAnimationDone && m_mode == MODE.COLLECTABLE && animationTimer >= animationTimerMax) {
+            isSpawnAnimationDone = true;
         }
 
         if(!isCollectable && m_mode == MODE.COLLECTABLE && isCollectableTimer >= getIsCollectableTimerMax) {
             isCollectable = true;
+
         }
+
 
         if(isCollectable) {
             // animate with a bouncing effect

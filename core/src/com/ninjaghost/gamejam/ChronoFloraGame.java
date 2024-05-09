@@ -254,6 +254,26 @@ public class ChronoFloraGame extends ApplicationAdapter {
 			showImGui = !showImGui;
 		}
 
+		// Initialize ImGUI Frame
+		ImGui.newFrame();
+		ImGui.begin("Hello, ImGui!");
+		ImGui.text(String.format("%d FPS", Gdx.graphics.getFramesPerSecond()));
+		// Update mouse input
+		ImGuiIO io = ImGui.getIO();
+		io.setMousePos(Gdx.input.getX(), Gdx.input.getY());
+		io.setMouseDown(0, Gdx.input.isButtonPressed(Input.Buttons.LEFT));
+		io.setMouseDown(1, Gdx.input.isButtonPressed(Input.Buttons.RIGHT));
+		io.setMouseDown(2, Gdx.input.isButtonPressed(Input.Buttons.MIDDLE));
+		fpsHistory.add(((float) Gdx.graphics.getFramesPerSecond()));
+		if(fpsHistory.size() > 100) { fpsHistory.remove(0); }
+		ImFloat refScale = new ImFloat(1.0f);
+		float[] data = new float[fpsHistory.size()];
+		for(int i = 0; i < fpsHistory.size(); i++) { data[i] = fpsHistory.get(i).floatValue(); }
+		ImGui.plotLines("Framerate", data, data.length, 0, "", 0, 60, 400, 100, 4);
+
+
+
+
 		// This chunk is all about setting a new target camera zoom based on player movement
 		float newTargetCameraZoom = getNewTargetCameraZoom();
 		cameraTargetZoomFactor[0] = newTargetCameraZoom;
@@ -266,6 +286,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		camera.position.set(new Vector3(cameraFocus[0], cameraFocus[1], 0));
 
 		camera.update();
+
+
 
 		// Update non-player entities
 		for(Plant p : plants) {
@@ -355,14 +377,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		uiStage.draw();
 
 
-		if(!showImGui) return;
 		// Render ImGUI
-		// Update mouse input
-		ImGuiIO io = ImGui.getIO();
-		io.setMousePos(Gdx.input.getX(), Gdx.input.getY());
-		io.setMouseDown(0, Gdx.input.isButtonPressed(Input.Buttons.LEFT));
-		io.setMouseDown(1, Gdx.input.isButtonPressed(Input.Buttons.RIGHT));
-		io.setMouseDown(2, Gdx.input.isButtonPressed(Input.Buttons.MIDDLE));
+
 //		// Update keyboard inputs
 //		// You can use an InputProcessor to handle and forward keyboard events to ImGui
 //		for (int i = 0; i < 256; i++) {
@@ -379,16 +395,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
 //		io.setKeySuper(Gdx.input.isKeyPressed(Input.Keys.SYM));
 
 
-		ImGui.newFrame();
-		ImGui.begin("Hello, ImGui!");
-		ImGui.text(String.format("%d FPS", Gdx.graphics.getFramesPerSecond()));
 
-		fpsHistory.add(((float) Gdx.graphics.getFramesPerSecond()));
-		if(fpsHistory.size() > 100) { fpsHistory.remove(0); }
-		ImFloat refScale = new ImFloat(1.0f);
-		float[] data = new float[fpsHistory.size()];
-		for(int i = 0; i < fpsHistory.size(); i++) { data[i] = fpsHistory.get(i).floatValue(); }
-		ImGui.plotLines("Framerate", data, data.length, 0, "", 0, 60, 400, 100, 4);
 
 		ImGui.text("Player");
 		ImGui.text("- Inventory");
@@ -401,9 +408,22 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		ImGui.inputFloat2("Focus", cameraFocus);
 		ImGui.sliderFloat("Target Zoom", cameraTargetZoomFactor, 0.01f, 1f);
 		ImGui.sliderFloat("Current Zoom", calculatedZoomFactor, 0.01f, 1f);
+
+		ImGui.text("Item Settings");
+		ImGui.sliderFloat("gravity", GameSettingsState.itemGravityFactor, -100f, 100f);
+		ImGui.sliderFloat("jump", GameSettingsState.itemJumpFactor, -50f, 50f);
+		ImGui.sliderFloat("speed", GameSettingsState.itemSpeedFactor, 0.01f, 50f);
+		ImGui.checkbox("reverse gravity", GameSettingsState.reverseGravity);
+		ImGui.checkbox("reverse move input", GameSettingsState.reverseInput);
+
 		ImGui.end();
-		ImGui.render();
-		imGuiImplGl3.renderDrawData(ImGui.getDrawData());
+
+		if(showImGui) {
+			ImGui.render();
+			imGuiImplGl3.renderDrawData(ImGui.getDrawData());
+		} else {
+			ImGui.endFrame();
+		}
 	}
 
 
