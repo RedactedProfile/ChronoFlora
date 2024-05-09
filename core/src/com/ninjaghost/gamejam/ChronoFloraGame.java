@@ -232,22 +232,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-
-		// this was used to test the FPS graph
-//		Random rnd = new Random();
-//		int rndMin = 1;
-//		int rndMax = 500;
-//		if(rnd.nextInt(rndMax) < 50) {
-//			try {
-//				Thread.sleep(rnd.nextInt(rndMax - rndMin) + rndMin);
-//			} catch (InterruptedException e) {
-//				throw new RuntimeException(e);
-//			}
-//		}
-
 		// remove things out of circulation
 		cleanupThingsForDeletion();
-
         rectanglesToRender.clear();
 
 		if(Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) {
@@ -272,8 +258,6 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		ImGui.plotLines("Framerate", data, data.length, 0, "", 0, 60, 400, 100, 4);
 
 
-
-
 		// This chunk is all about setting a new target camera zoom based on player movement
 		float newTargetCameraZoom = getNewTargetCameraZoom();
 		cameraTargetZoomFactor[0] = newTargetCameraZoom;
@@ -284,9 +268,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 		// Control camera focus
 		camera.position.set(new Vector3(cameraFocus[0], cameraFocus[1], 0));
-
 		camera.update();
-
 
 
 		// Update non-player entities
@@ -394,9 +376,6 @@ public class ChronoFloraGame extends ApplicationAdapter {
 //		io.setKeyAlt(Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT));
 //		io.setKeySuper(Gdx.input.isKeyPressed(Input.Keys.SYM));
 
-
-
-
 		ImGui.text("Player");
 		ImGui.text("- Inventory");
 		for (PlantItem plant : playerInventory) {
@@ -413,8 +392,6 @@ public class ChronoFloraGame extends ApplicationAdapter {
 		ImGui.sliderFloat("gravity", GameSettingsState.itemGravityFactor, -100f, 100f);
 		ImGui.sliderFloat("jump", GameSettingsState.itemJumpFactor, -50f, 50f);
 		ImGui.sliderFloat("speed", GameSettingsState.itemSpeedFactor, 0.01f, 50f);
-		ImGui.checkbox("reverse gravity", GameSettingsState.reverseGravity);
-		ImGui.checkbox("reverse move input", GameSettingsState.reverseInput);
 
 		ImGui.end();
 
