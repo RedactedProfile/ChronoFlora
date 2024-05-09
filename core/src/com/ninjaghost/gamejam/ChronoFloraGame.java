@@ -346,15 +346,10 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 		_panel.clearChildren();
 		_panel.align(Align.left);
-		int _invItems = 0;
-		float _invInitialOffset = 45f;
+		_panel.padLeft(45f);
 		for(PlantItem pl : playerInventory) {
 			SpriteActor _actor = new SpriteActor(pl.getSprite());
-			float toPad = 35f * _invItems;
-			// initial one is special
-			if(_invItems == 0) { toPad += _invInitialOffset; }
-			_panel.add(_actor).padLeft(toPad);
-			_invItems++;
+			_panel.add(_actor).padRight(34f);
 		}
 		uiStage.act(Gdx.graphics.getDeltaTime());
 		uiStage.draw();
