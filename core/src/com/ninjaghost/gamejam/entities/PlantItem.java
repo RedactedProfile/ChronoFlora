@@ -27,6 +27,7 @@ public class PlantItem {
 
     // Collectable Item Mode Stuff
     boolean isCollectable = false;
+    Vector2 collectableTargetPosition = new Vector2();
     float isCollectableTimer = 0f;
     float getIsCollectableTimerMax = 1f;
 
@@ -58,7 +59,8 @@ public class PlantItem {
 
     public void spawnItem() {
         m_mode = MODE.INVENTORY;
-        m_sprite.setSize(32, -32);
+        m_sprite.setSize(32, 32);
+        m_sprite.setFlip(false, false);
     }
 
     public void spawnCollectable() {
@@ -66,7 +68,7 @@ public class PlantItem {
         m_mode = MODE.COLLECTABLE;
         visible = true;
 
-        m_position = new Vector2(m_sprite.getX() - 5f, m_sprite.getY() - 5f);
+        collectableTargetPosition = new Vector2(m_sprite.getX() - 5f, m_sprite.getY() - 5f);
         m_sprite.setSize(8, 8);
         m_sprite.setPosition(m_position.x, m_position.y);
     }
@@ -84,7 +86,9 @@ public class PlantItem {
 
             // we're going to do a kind of bounce effect from the location registered
             // but for now let's just put it in the "spot" it's going to wind up at
-
+            m_position.x = collectableTargetPosition.x;
+            m_position.y = collectableTargetPosition.y;
+            m_sprite.setPosition(collectableTargetPosition.x, collectableTargetPosition.y);
         }
 
         if(!isCollectable && m_mode == MODE.COLLECTABLE && isCollectableTimer >= getIsCollectableTimerMax) {
