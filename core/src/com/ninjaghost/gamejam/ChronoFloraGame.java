@@ -139,6 +139,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
 	// Inventory
 	ArrayList<PlantItem> playerInventory = new ArrayList<>();
 	int playerInventoryStackMax = 6;
+	int activeInventorySlot = 1;
 
 	// Controller
 	GameplayInputState gameplayInputState;
@@ -345,15 +346,18 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
 
 		// Render the UI
-
 		_panel.clearChildren();
 		_panel.align(Align.left);
 		_panel.padLeft(45f);
+		int slots = 1;
 		for(PlantItem pl : playerInventory) {
 			InventorySpriteActor _actor = new InventorySpriteActor(pl.getSprite());
 			_actor.data = pl;
+			_actor.slot = slots;
+			_actor.activeSlot = activeInventorySlot;
 			_actor.update(Gdx.graphics.getDeltaTime());
 			_panel.add(_actor).padRight(34f);
+			slots++;
 		}
 		uiStage.act(Gdx.graphics.getDeltaTime());
 		uiStage.draw();

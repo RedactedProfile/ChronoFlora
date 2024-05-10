@@ -1,6 +1,7 @@
 package com.ninjaghost.gamejam;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -9,12 +10,17 @@ import com.ninjaghost.gamejam.entities.PlantItem;
 
 public class InventorySpriteActor extends Actor {
     private Sprite sprite;
-    boolean isSelected = true;
+    boolean isSelected = false;
 
     public PlantItem data;
 
     TextureAtlas invMeterAtlas;
     Sprite invMeterSprite;
+
+    Sprite invSelected;
+
+    public int slot = 0;
+    public int activeSlot = 0;
 
     public InventorySpriteActor(Sprite _sprite) {
         this.sprite = _sprite;
@@ -23,6 +29,13 @@ public class InventorySpriteActor extends Actor {
 
         invMeterAtlas = new TextureAtlas(Gdx.files.internal("ui/inv_capacity_meter/InventoryMeter.atlas"));
         invMeterSprite = new Sprite(invMeterAtlas.findRegion("inv_capacity_meter01"));
+
+        invSelected = new Sprite(new Texture("ui/inv_selected.png"));
+//        invSelected.setScale(1.7f);
+
+        if(activeSlot == slot) {
+            isSelected = true;
+        }
     }
 
     public void update(float delta) {
@@ -39,13 +52,25 @@ public class InventorySpriteActor extends Actor {
         }
         s_frame = "inv_capacity_meter" + s_frame;
         invMeterSprite = new Sprite(invMeterAtlas.findRegion(s_frame));
+
+        isSelected = false;
+        if(activeSlot == slot) {
+            isSelected = true;
+        }
     }
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        if(isSelected) {
+            invSelected.setSize(52, 48);
+            invSelected.setPosition(getX() - 11f, getY() - 8f);
+            invSelected.draw(batch);
+        }
         sprite.setPosition(getX() - 5f, getY());
         sprite.draw(batch);
         invMeterSprite.setPosition(getX() + 30f, getY());
         invMeterSprite.draw(batch);
+
+
     }
 }
