@@ -43,7 +43,7 @@ public class InventorySpriteActor extends Actor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        sprite.setPosition(getX(), getY());
+        sprite.setPosition(getX() - 5f, getY());
         sprite.draw(batch);
         invMeterSprite.setPosition(getX() + 30f, getY());
         invMeterSprite.draw(batch);
