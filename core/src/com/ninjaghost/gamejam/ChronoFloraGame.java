@@ -239,6 +239,42 @@ public class ChronoFloraGame extends ApplicationAdapter {
 			showImGui = !showImGui;
 		}
 
+		if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_1)) {
+			if(!playerInventory.isEmpty()) {
+				activeInventorySlot = 1;
+			}
+		} else if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_2)) {
+			if(playerInventory.size() > 1) {
+				activeInventorySlot = 2;
+			}
+		} else if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_3)) {
+			if(playerInventory.size() > 2) {
+				activeInventorySlot = 3;
+			}
+		} else if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_4)) {
+			if(playerInventory.size() > 3) {
+				activeInventorySlot = 4;
+			}
+		} else if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_5)) {
+			if(playerInventory.size() > 4) {
+				activeInventorySlot = 5;
+			}
+		} else if(Gdx.input.isKeyJustPressed(Input.Keys.NUM_6)) {
+			if(playerInventory.size() > 5) {
+				activeInventorySlot = 6;
+			}
+		} else if(Gdx.input.isKeyJustPressed(Input.Keys.LEFT_BRACKET)) {
+			activeInventorySlot--;
+			if(activeInventorySlot < 1) {
+				activeInventorySlot = playerInventory.size();
+			}
+		} else if(Gdx.input.isKeyJustPressed(Input.Keys.RIGHT_BRACKET)) {
+			activeInventorySlot++;
+			if(activeInventorySlot > playerInventory.size() || activeInventorySlot > playerInventoryStackMax) {
+				activeInventorySlot = 1;
+			}
+		}
+
 		// Initialize ImGUI Frame
 		ImGui.newFrame();
 		ImGui.begin("Hello, ImGui!");
