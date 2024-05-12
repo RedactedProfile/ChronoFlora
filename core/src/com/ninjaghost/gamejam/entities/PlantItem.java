@@ -78,6 +78,12 @@ public class PlantItem {
         m_sprite.setPosition(m_position.x, m_position.y);
     }
 
+    public void spawnCollectable(String direction, float velocity) {
+        spawnCollectable();
+
+        // use direction and velocity to change the "pop" animation to a "tossed" animation
+    }
+
     public void update(float delta) {
         if(m_sprite == null) return;
 

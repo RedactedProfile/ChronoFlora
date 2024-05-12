@@ -8,6 +8,7 @@ public class GameplayInputState {
     public boolean action = false;
     public boolean shift = false;
     public boolean escape = false;
+    public boolean discard = false;
 
     public boolean invOne = false;
     public boolean invTwo = false;

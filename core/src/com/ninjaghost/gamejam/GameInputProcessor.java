@@ -65,6 +65,9 @@ public class GameInputProcessor implements InputProcessor {
             case Keys.NUM_6:
                 gameplayInputState.invSix = true;
                 break;
+            case Keys.Q:
+                gameplayInputState.discard = true;
+                break;
         }
         return true;
     }
@@ -114,6 +117,9 @@ public class GameInputProcessor implements InputProcessor {
                 break;
             case Keys.NUM_6:
                 gameplayInputState.invSix = false;
+                break;
+            case Keys.Q:
+                gameplayInputState.discard = false;
                 break;
         }
         return true;
