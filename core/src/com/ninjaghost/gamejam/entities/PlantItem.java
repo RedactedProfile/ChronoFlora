@@ -93,15 +93,19 @@ public class PlantItem {
         launchDirection = direction;
 
         // 70f low, 150f high
+        float throwMinimumVelocity = 70f,
+              throwMaximumVelocity = 150f,
+              throwInputVelocityMultiplier = 35f;
 
-//        launchVelocity = 70f * velocity;
-//        if(launchVelocity > 150f) {
-//            launchVelocity = 150f;
-//        }
-//        GameSettingsState.launchVelocity[0] = launchVelocity;
-//        System.out.printf("lv: %s", launchVelocity);
+        launchVelocity = throwMinimumVelocity + (throwInputVelocityMultiplier * velocity);
+        if(launchVelocity > throwMaximumVelocity) {
+            launchVelocity = throwMaximumVelocity;
+        }
 
-        launchVelocity = GameSettingsState.launchVelocity[0];
+        GameSettingsState.launchVelocity[0] = launchVelocity;
+        System.out.printf("lv: %s", launchVelocity);
+
+//        launchVelocity = GameSettingsState.launchVelocity[0];
     }
 
     public void update(float delta) {

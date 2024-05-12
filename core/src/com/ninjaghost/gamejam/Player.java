@@ -145,8 +145,8 @@ final public class Player {
                 discardTimer += delta;
             } else if(discardTimer > 0f && !gameplayInputState.discard) {
                 // we've since released
-                discardTimer = 0f;
                 GameSettingsState.gameInstance.playerDiscardActiveInventory(this, discardTimer);
+                discardTimer = 0f;
             }
         }
 
