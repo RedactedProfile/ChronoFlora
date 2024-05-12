@@ -398,6 +398,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
         ImGui.sliderFloat("gravity", GameSettingsState.itemGravityFactor, -100f, 100f);
         ImGui.sliderFloat("jump", GameSettingsState.itemJumpFactor, -50f, 50f);
         ImGui.sliderFloat("speed", GameSettingsState.itemSpeedFactor, 0.01f, 50f);
+        ImGui.sliderFloat("launchVelocity", GameSettingsState.launchVelocity, 70f, 150f);
 
         ImGui.end();
 
