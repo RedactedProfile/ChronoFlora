@@ -94,12 +94,12 @@ public class PlantItem {
 
         // 70f low, 150f high
 
-        launchVelocity = 70f * velocity;
-        if(launchVelocity > 150f) {
-            launchVelocity = 150f;
-        }
-        GameSettingsState.launchVelocity[0] = launchVelocity;
-        System.out.printf("lv: %s", launchVelocity);
+//        launchVelocity = 70f * velocity;
+//        if(launchVelocity > 150f) {
+//            launchVelocity = 150f;
+//        }
+//        GameSettingsState.launchVelocity[0] = launchVelocity;
+//        System.out.printf("lv: %s", launchVelocity);
 
         launchVelocity = GameSettingsState.launchVelocity[0];
     }
@@ -152,14 +152,17 @@ public class PlantItem {
                 }
 
                 if(launchDirection.equals("up")) {
+                    m_position.y -= launchVelocity * delta;
 
                 } else if(launchDirection.equals("down")) {
+                    m_position.y += launchVelocity * delta;
 
                 } else if(launchDirection.equals("left")) {
+                    m_position.x -= launchVelocity * delta;
 
                 } else if(launchDirection.equals("right")) {
                     m_position.x += launchVelocity * delta;
-                    m_position.y += 1f * delta;
+//                    m_position.y += 1f * delta;
                 }
 
 
