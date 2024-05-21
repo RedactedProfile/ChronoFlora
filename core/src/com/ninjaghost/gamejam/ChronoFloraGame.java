@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
@@ -32,7 +33,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ChronoFloraGame extends ApplicationAdapter {
@@ -68,6 +68,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
     ArrayList<TextField> _fields;
     TextArea _field2;
     Table _panel;
+    TextArea _timer;
 
     // Playable NPC Object
     Player player;
@@ -91,6 +92,15 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
     // Audio Related Stuff
     HashMap<String, Sound> sounds = new HashMap<>();
+
+    float countdownTimer = 5 * 60 * 1000; // Five minutes
+
+    private String convertTimerToString() {
+        long totalSeconds = (long) (countdownTimer / 1000),
+                minutes = totalSeconds / 60,
+                seconds = totalSeconds % 60;
+        return String.format("%d:%02d", minutes, seconds);
+    }
 
     @Override
     public void create () {
@@ -138,6 +148,25 @@ public class ChronoFloraGame extends ApplicationAdapter {
         _field2.setPosition(  0, Gdx.graphics.getHeight() - _field2.getHeight());
         uiStage.addActor(_field2);
 
+        FreeTypeFontGenerator timerFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("fonts/CCOverbyteOn.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 32;
+
+        BitmapFont timerFont = timerFontGenerator.generateFont(parameter);
+        timerFontGenerator.dispose();
+
+        TextField.TextFieldStyle timertextFieldStyle = new TextField.TextFieldStyle();
+        timertextFieldStyle.font = timerFont;
+        timertextFieldStyle.fontColor = Color.WHITE;
+//        timertextFieldStyle.background = uiSkin.getDrawable("textfield");
+
+        _timer = new TextArea(convertTimerToString(), uiSkin);
+        _timer.setStyle(timertextFieldStyle);
+        _timer.setSize(90, 45);
+        _timer.setAlignment(Align.center);
+        _timer.setPosition(((float) Gdx.graphics.getWidth() / 2) - (_timer.getWidth() / 2), Gdx.graphics.getHeight() - _timer.getHeight() - 10);
+        uiStage.addActor(_timer);
+
         _panel = new Table(uiSkin);
 //		_panel.debugAll();
         _panel.defaults().align(Align.left);
@@ -172,6 +201,10 @@ public class ChronoFloraGame extends ApplicationAdapter {
         // remove things out of circulation
         cleanupThingsForDeletion();
         rectanglesToRender.clear();
+
+        // update timer
+        countdownTimer -= Gdx.graphics.getDeltaTime() * 1000;
+        _timer.setText(convertTimerToString());
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) {
             showImGui = !showImGui;
@@ -235,6 +268,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
             column++;
         }
 
+        // Draw the Puzzle Input map island
         int puzzlemapBridgeLength = 6;
         int puzzlemapOffset = -((puzzlemapBreak * 16) + (puzzlemapBridgeLength * 16));
         row = 0; column = 0; // reset these values to start again
