@@ -60,7 +60,9 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
     ArrayList<Tile> tiles = new ArrayList<>();
     int tilemapBreak = 64;
-    int[] tilemap = new int[ 64 * 64 ];
+    int puzzlemapBreak = 12;
+    int[] tilemap = new int[ tilemapBreak * tilemapBreak ];
+    int[] puzzlemap = new int[ puzzlemapBreak * puzzlemapBreak ];
 
     // UI Widgets
     ArrayList<TextField> _fields;
@@ -128,6 +130,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
             tiles.add(new Tile(formatTid));
         }
         Arrays.fill(tilemap, 47);
+        Arrays.fill(puzzlemap, 56);
         System.out.println("Loaded " + tiles.size() + " tiles");
 
         _field2 = new TextArea("Controls:\nW/A/S/D = Move around\nShift (hold) = Run\nSpace = Attack", uiSkin);
@@ -228,6 +231,21 @@ public class ChronoFloraGame extends ApplicationAdapter {
             int tileId = (int) number;
 
             tiles.get(tileId).draw(batch, column * 16, row * 16);
+
+            column++;
+        }
+
+        int puzzlemapBridgeLength = 6;
+        int puzzlemapOffset = -((puzzlemapBreak * 16) + (puzzlemapBridgeLength * 16));
+        row = 0; column = 0; // reset these values to start again
+        for (Number number : puzzlemap) {
+            if (column >= puzzlemapBreak) {
+                row++;
+                column = 0;
+            }
+            int tileId = (int) number;
+
+            tiles.get(tileId).draw(batch,  column * 16 + puzzlemapOffset, row * 16);
 
             column++;
         }
