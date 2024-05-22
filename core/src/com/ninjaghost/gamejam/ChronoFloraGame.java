@@ -319,6 +319,31 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
         batch.end();
 
+        // Find the "affectable" tile the player would be interacting with, and hilight it
+        // - get which island the player is on
+        // - get player location
+        // - multiply divide 16 w/ island offset
+        // - this is to get the current tile the player occupies
+        // - after this we get the player direction, and offset the affected tile by one ahead of player direction
+        int tileX = (int) Math.round((int)player.currentPosition.x / 16),
+            tileY = (int) Math.round((int)player.currentPosition.y / 16);
+
+        if(player.playerDirection.equals("up")) {
+            tileY -= 1;
+        } else if (player.playerDirection.equals("down")) {
+            tileY += 1;
+        } else if (player.playerDirection.equals("left")) {
+            tileX -= 1;
+        } else if (player.playerDirection.equals("right")) {
+            tileX += 1;
+        }
+
+        // Reneder the "selected tile"
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.YELLOW);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.rect(tileX * 16, tileY * 16, 16, 16);
+        shapeRenderer.end();
 
         // Let's show the bounding boxes of invisible bounding boxes
         if(GameSettingsState.showCollisionBoxes && !rectanglesToRender.isEmpty()) {
@@ -374,6 +399,9 @@ public class ChronoFloraGame extends ApplicationAdapter {
         for (PlantItem plant : playerInventory) {
             ImGui.text(plant.tag + ": " + plant.getStackCount());
         }
+
+        ImGui.text("- Tile");
+        ImGui.text(String.format("%d,%d", tileX, tileY));
 
 //		ImGui.text(String.format("player vel: %f", player.movementVelocity));
         ImGui.text("Camera Settings");
