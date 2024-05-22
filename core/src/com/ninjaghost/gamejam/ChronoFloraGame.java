@@ -325,8 +325,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
         // - multiply divide 16 w/ island offset
         // - this is to get the current tile the player occupies
         // - after this we get the player direction, and offset the affected tile by one ahead of player direction
-        int tileX = (int) Math.round((int)player.currentPosition.x / 16),
-            tileY = (int) Math.round((int)player.currentPosition.y / 16);
+        int tileX = (int) Math.floor(player.currentPosition.x / 16),
+            tileY = (int) Math.floor(player.currentPosition.y / 16);
 
         if(player.playerDirection.equals("up")) {
             tileY -= 1;
