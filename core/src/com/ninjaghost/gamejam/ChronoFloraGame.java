@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
@@ -33,6 +34,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ChronoFloraGame extends ApplicationAdapter {
@@ -77,6 +79,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
     ArrayList<PlantItem> playerInventory = new ArrayList<>();
     int playerInventoryStackMax = 6;
     int activeInventorySlot = 1;
+    int activeTileX = 0,
+        activeTileY = 0;
 
     // Controller
     GameplayInputState gameplayInputState;
@@ -319,30 +323,13 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
         batch.end();
 
-        // Find the "affectable" tile the player would be interacting with, and hilight it
-        // - get which island the player is on
-        // - get player location
-        // - multiply divide 16 w/ island offset
-        // - this is to get the current tile the player occupies
-        // - after this we get the player direction, and offset the affected tile by one ahead of player direction
-        int tileX = (int) Math.floor(player.currentPosition.x / 16),
-            tileY = (int) Math.floor(player.currentPosition.y / 16);
+        calculateActiveTile();
 
-        if(player.playerDirection.equals("up")) {
-            tileY -= 1;
-        } else if (player.playerDirection.equals("down")) {
-            tileY += 1;
-        } else if (player.playerDirection.equals("left")) {
-            tileX -= 1;
-        } else if (player.playerDirection.equals("right")) {
-            tileX += 1;
-        }
-
-        // Reneder the "selected tile"
+        // Render the "selected tile"
         shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
         shapeRenderer.setColor(Color.YELLOW);
         shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.rect(tileX * 16, tileY * 16, 16, 16);
+        shapeRenderer.rect(activeTileX * 16, activeTileY * 16, 16, 16);
         shapeRenderer.end();
 
         // Let's show the bounding boxes of invisible bounding boxes
@@ -401,7 +388,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
         }
 
         ImGui.text("- Tile");
-        ImGui.text(String.format("%d,%d", tileX, tileY));
+        ImGui.text(String.format("%d,%d", activeTileX, activeTileY));
 
 //		ImGui.text(String.format("player vel: %f", player.movementVelocity));
         ImGui.text("Camera Settings");
@@ -423,6 +410,30 @@ public class ChronoFloraGame extends ApplicationAdapter {
         } else {
             ImGui.endFrame();
         }
+    }
+
+    private void calculateActiveTile() {
+        // Find the "affectable" tile the player would be interacting with, and hilight it
+        // - get which island the player is on
+        // - get player location
+        // - multiply divide 16 w/ island offset
+        // - this is to get the current tile the player occupies
+        // - after this we get the player direction, and offset the affected tile by one ahead of player direction
+        int tileX = (int) Math.floor(player.currentPosition.x / 16),
+            tileY = (int) Math.floor(player.currentPosition.y / 16);
+
+        if(player.playerDirection.equals("up")) {
+            tileY -= 1;
+        } else if (player.playerDirection.equals("down")) {
+            tileY += 1;
+        } else if (player.playerDirection.equals("left")) {
+            tileX -= 1;
+        } else if (player.playerDirection.equals("right")) {
+            tileX += 1;
+        }
+
+        activeTileX = tileX;
+        activeTileY = tileY;
     }
 
 
