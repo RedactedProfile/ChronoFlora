@@ -303,15 +303,25 @@ public class ChronoFloraGame extends ApplicationAdapter {
             // Run through all attackable entities to check the bounding box
 
             for(Plant p : plants) {
-                p.checkCollision(player.attackCollisionBounds);
+                p.checkAttackCollision(player.attackCollisionBounds);
             }
         }
 
 
+        calculateActiveTile();
+        // Render the "selected tile"
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        shapeRenderer.setColor(Color.YELLOW);
+        shapeRenderer.setProjectionMatrix(camera.combined);
+        shapeRenderer.rect(activeTileX * 16, activeTileY * 16, 16, 16);
+        shapeRenderer.end();
+
+        if(Gdx.input.isKeyJustPressed(Input.Keys.E)) {
+            playerUseHandler();
+        }
+
         // draw entities
         batch.begin();
-
-
         for(Plant p : plants) {
             p.draw(batch);
         }
@@ -322,15 +332,6 @@ public class ChronoFloraGame extends ApplicationAdapter {
         player.draw(batch);
 
         batch.end();
-
-        calculateActiveTile();
-
-        // Render the "selected tile"
-        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
-        shapeRenderer.setColor(Color.YELLOW);
-        shapeRenderer.setProjectionMatrix(camera.combined);
-        shapeRenderer.rect(activeTileX * 16, activeTileY * 16, 16, 16);
-        shapeRenderer.end();
 
         // Let's show the bounding boxes of invisible bounding boxes
         if(GameSettingsState.showCollisionBoxes && !rectanglesToRender.isEmpty()) {
@@ -412,6 +413,30 @@ public class ChronoFloraGame extends ApplicationAdapter {
         }
     }
 
+    /**
+     * This function deals with handling placing inventory items in valid locations
+     */
+    private void playerUseHandler() {
+        // check if we even have available inventory to spend
+        if(playerInventory.isEmpty()) {
+            return;
+        }
+        if(playerInventory.size() < activeInventorySlot) {
+            return;
+        }
+
+        PlantItem activePlantItem = playerInventory.get(activeInventorySlot - 1);
+        if(activePlantItem.stackCount <= 0) {
+            return;
+        }
+
+        // check if the tile is valid
+        // @todo (we'll just allow placement anywhere for the moment)
+
+        // if all is good then do an inventory usage
+        plantInventoryItem(activePlantItem);
+    }
+
     private void calculateActiveTile() {
         // Find the "affectable" tile the player would be interacting with, and hilight it
         // - get which island the player is on
@@ -436,6 +461,42 @@ public class ChronoFloraGame extends ApplicationAdapter {
         activeTileY = tileY;
     }
 
+
+    private void plantInventoryItem(PlantItem from) {
+        int locX = activeTileX * 16,
+            locY = activeTileY * 16;
+        Rectangle locRect = new Rectangle(locX, locY, 16, 16);
+
+        // one last set of conditions regarding planting
+        boolean doUse = true;
+
+        // find if something is in this tile first
+        Plant plantToRemove = null;
+        for(Plant _pl : plants) {
+            if(_pl.checkCollision(locRect)) {
+                if(!_pl.isCut) {
+                    // we only want to plant over plants that are cut, but not if there's an uncut plant here
+                    doUse = false;
+                    break;
+                }
+
+                plantToRemove = _pl;
+                break;
+            }
+        }
+
+        if(!doUse) {
+            return;
+        }
+
+        if(plantToRemove != null) {
+            plants.remove(plantToRemove);
+        }
+
+        Plant plant = new Plant(locX, locY);
+        plants.add(plant);
+        removeItemFromStack(from);
+    }
 
     public void spawnPlantItem(Plant from) {
         PlantItem newPlantItem = new PlantItem((int) from.getPosition().x, (int)from.getPosition().y);
@@ -487,6 +548,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
             playerInventory.add(_new);
         }
     }
+
+
 
     public Player getPlayer() {
         return player;
@@ -540,13 +603,17 @@ public class ChronoFloraGame extends ApplicationAdapter {
             newPlantItem.spawnCollectable(player.playerDirection, discardTimer);
             plantItems.add(newPlantItem);
 
-            // remove item
-            playerInventory.get(activeInventorySlot - 1).stackCount--;
+            removeItemFromStack(playerInventory.get(activeInventorySlot -1));
+        }
+    }
 
-            // if stack count is 0 (or somehow less) remove it from player inventory
-            if(playerInventory.get(activeInventorySlot - 1).stackCount <= 0) {
-                playerInventory.remove(activeInventorySlot - 1);
-            }
+    private void removeItemFromStack(PlantItem item) {
+        // remove item
+        item.stackCount--;
+
+        // if stack count is 0 (or somehow less) remove it from player inventory
+        if(item.stackCount <= 0) {
+            playerInventory.remove(item);
         }
     }
 

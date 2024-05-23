@@ -11,7 +11,7 @@ public class Plant {
 
     private Sprite m_sprite;
     private Vector2 m_position;
-    boolean isCut = false;
+    public boolean isCut = false;
 
     public String tag = "plant";
 
@@ -38,13 +38,19 @@ public class Plant {
         m_sprite.draw(batch);
     }
 
-    public void checkCollision(Rectangle collider) {
+    public void checkAttackCollision(Rectangle collider) {
         if(m_sprite == null || isCut) return;
 
         if(collider.overlaps(m_sprite.getBoundingRectangle())) {
             doHit();
             GameSettingsState.gameInstance.spawnPlantItem(this);
         }
+    }
+
+    public boolean checkCollision(Rectangle collider) {
+        if(m_sprite == null) return false;
+
+        return collider.overlaps(m_sprite.getBoundingRectangle());
     }
 
     private void doHit() {

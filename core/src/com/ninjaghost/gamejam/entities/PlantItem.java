@@ -58,6 +58,9 @@ public class PlantItem {
     public void addStack() {
         stackCount++;
     }
+    public void removeStack() {
+        stackCount--;
+    }
 
     public int getStackCount() {
         return stackCount;
