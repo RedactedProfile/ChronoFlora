@@ -61,6 +61,7 @@ final public class Player {
             gameplayInputState.action = false;
             attackTimer = 0.001f;
             animationState = "attack";
+            GameSettingsState.gameInstance.playSound("swish", 0.5f, true);
         }
         if(attackTimer >= attackTimerMax) {
             animationState = "idle";

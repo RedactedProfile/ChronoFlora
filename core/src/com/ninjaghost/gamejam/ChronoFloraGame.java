@@ -185,6 +185,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
         // Load common sounds
         sounds.put("collect", Gdx.audio.newSound(Gdx.files.internal("sfx/pop.mp3")));
+        sounds.put("swish", Gdx.audio.newSound(Gdx.files.internal("sfx/swish.mp3")));
 
 
         // Generate Islands
@@ -560,8 +561,9 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
         // Randomize the volume and pitch
 //		Random random = new Random();
-        float pitch = ThreadLocalRandom.current().nextFloat(0.5f, 1.5f);
-        sounds.get("collect").play(0.4f, pitch, 0f);
+//        float pitch = ThreadLocalRandom.current().nextFloat(0.5f, 1.5f);
+//        sounds.get("collect").play(0.4f, pitch, 0f);
+        playSound("collect", 0.4f, true);
 
         // add to inventory
 
@@ -687,5 +689,14 @@ public class ChronoFloraGame extends ApplicationAdapter {
         if (ImGui.getIO() != null) {
             ImGui.getIO().setDisplaySize(width, height);
         }
+    }
+
+    public void playSound(String sfx, float volume, boolean varyPitch) {
+        float pitch = 1.0f;
+        if(varyPitch) {
+            pitch = ThreadLocalRandom.current().nextFloat(0.5f, 1.5f);
+        }
+
+        sounds.get(sfx).play(volume, pitch, 0f);
     }
 }
