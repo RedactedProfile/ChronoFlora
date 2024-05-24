@@ -209,6 +209,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
         // update timer
         countdownTimer -= Gdx.graphics.getDeltaTime() * 1000;
+        if(countdownTimer <= 0) countdownTimer = 0;
         _timer.setText(convertTimerToString());
 
         if(Gdx.input.isKeyJustPressed(Input.Keys.GRAVE)) {
