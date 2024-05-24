@@ -3,10 +3,10 @@
     "jdk": "openjdk-22.0.1_windows-x64_bin.zip",
     "executable": "ChronoFlora",
     "classpath": [
-        "ChronoFlora-0.3-alpha.jar"
+        "ChronoFlora-0.4-alpha.jar"
     ],
     "removelibs": [
-        "ChronoFlora-0.3-alpha.jar"
+        "ChronoFlora-0.4-alpha.jar"
     ],
     "mainclass": "com.ninjaghost.gamejam.DesktopLauncher",
     "vmargs": [
