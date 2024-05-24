@@ -34,7 +34,6 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Vector;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ChronoFloraGame extends ApplicationAdapter {
@@ -432,6 +431,22 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
         // check if the tile is valid
         // @todo (we'll just allow placement anywhere for the moment)
+        // we can't place items outside of the map or on the bridge
+        // we can't place items inside of collision barriers (@todo map collision not in yet)
+
+        boolean validTile = false;
+        // 1. check if we're on the main island
+        if(activeTileX >= 0 && activeTileY >= 0 && activeTileX < tilemapBreak && activeTileY < tilemapBreak) {
+            validTile = true;
+        }
+        if(!validTile) {
+            // 2. check if we're on the 2nd island
+            
+        }
+
+        if(!validTile) {
+            return;
+        }
 
         // if all is good then do an inventory usage
         plantInventoryItem(activePlantItem);
