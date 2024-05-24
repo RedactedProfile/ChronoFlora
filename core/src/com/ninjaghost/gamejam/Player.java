@@ -26,13 +26,15 @@ final public class Player {
     private Animation<TextureRegion> frameAnimation;
     private float animationTimer = 0f;
 
+    public String playerDirection = "right";
     private Map<String, Map<String, Animation<TextureRegion>>> animationBank;
-    private String playerDirection = "right";
     private String animationState = "idle";
     private boolean animationLooping = true;
 
     private float attackTimer = 0f;
     private float attackTimerMax = 0.25f;
+    private float discardTimer = 0f;
+
 
     public Rectangle attackCollisionBounds = null;
 
@@ -59,6 +61,7 @@ final public class Player {
             gameplayInputState.action = false;
             attackTimer = 0.001f;
             animationState = "attack";
+            GameSettingsState.gameInstance.playSound("swish", 0.5f, true);
         }
         if(attackTimer >= attackTimerMax) {
             animationState = "idle";
@@ -107,6 +110,7 @@ final public class Player {
         float centerOffsetX = 0f;
         float centerOffsetY = 0f;
         if(attackTimer > 0f) {
+            discardTimer = 0f; // dont allow discarding while attacking
             movementVelocity = 0f;
             animationState = "attack";
             animationLooping = false;
@@ -132,6 +136,18 @@ final public class Player {
                 }
 
                 animationLooping = true;
+            }
+
+            if(gameplayInputState.discard && discardTimer <= 0f) {
+                // start discard timer
+                discardTimer += delta;
+            } else if(gameplayInputState.discard && discardTimer > 0f) {
+                // holding down, increase timer
+                discardTimer += delta;
+            } else if(discardTimer > 0f && !gameplayInputState.discard) {
+                // we've since released
+                GameSettingsState.gameInstance.playerDiscardActiveInventory(this, discardTimer);
+                discardTimer = 0f;
             }
         }
 

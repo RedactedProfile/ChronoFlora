@@ -1,0 +1,131 @@
+{ "frames": {
+   "inv_capacity_meter 0.aseprite": {
+    "frame": { "x": 0, "y": 0, "w": 10, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 32 },
+    "sourceSize": { "w": 10, "h": 32 },
+    "duration": 100
+   },
+   "inv_capacity_meter 1.aseprite": {
+    "frame": { "x": 10, "y": 0, "w": 10, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 32 },
+    "sourceSize": { "w": 10, "h": 32 },
+    "duration": 100
+   },
+   "inv_capacity_meter 2.aseprite": {
+    "frame": { "x": 20, "y": 0, "w": 10, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 32 },
+    "sourceSize": { "w": 10, "h": 32 },
+    "duration": 100
+   },
+   "inv_capacity_meter 3.aseprite": {
+    "frame": { "x": 30, "y": 0, "w": 10, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 32 },
+    "sourceSize": { "w": 10, "h": 32 },
+    "duration": 100
+   },
+   "inv_capacity_meter 4.aseprite": {
+    "frame": { "x": 40, "y": 0, "w": 10, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 32 },
+    "sourceSize": { "w": 10, "h": 32 },
+    "duration": 100
+   },
+   "inv_capacity_meter 5.aseprite": {
+    "frame": { "x": 50, "y": 0, "w": 10, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 32 },
+    "sourceSize": { "w": 10, "h": 32 },
+    "duration": 100
+   },
+   "inv_capacity_meter 6.aseprite": {
+    "frame": { "x": 60, "y": 0, "w": 10, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 32 },
+    "sourceSize": { "w": 10, "h": 32 },
+    "duration": 100
+   },
+   "inv_capacity_meter 7.aseprite": {
+    "frame": { "x": 70, "y": 0, "w": 10, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 32 },
+    "sourceSize": { "w": 10, "h": 32 },
+    "duration": 100
+   },
+   "inv_capacity_meter 8.aseprite": {
+    "frame": { "x": 80, "y": 0, "w": 10, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 32 },
+    "sourceSize": { "w": 10, "h": 32 },
+    "duration": 100
+   },
+   "inv_capacity_meter 9.aseprite": {
+    "frame": { "x": 90, "y": 0, "w": 10, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 32 },
+    "sourceSize": { "w": 10, "h": 32 },
+    "duration": 100
+   },
+   "inv_capacity_meter 10.aseprite": {
+    "frame": { "x": 100, "y": 0, "w": 10, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 32 },
+    "sourceSize": { "w": 10, "h": 32 },
+    "duration": 100
+   },
+   "inv_capacity_meter 11.aseprite": {
+    "frame": { "x": 110, "y": 0, "w": 10, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 32 },
+    "sourceSize": { "w": 10, "h": 32 },
+    "duration": 100
+   },
+   "inv_capacity_meter 12.aseprite": {
+    "frame": { "x": 120, "y": 0, "w": 10, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 32 },
+    "sourceSize": { "w": 10, "h": 32 },
+    "duration": 100
+   },
+   "inv_capacity_meter 13.aseprite": {
+    "frame": { "x": 130, "y": 0, "w": 10, "h": 32 },
+    "rotated": false,
+    "trimmed": false,
+    "spriteSourceSize": { "x": 0, "y": 0, "w": 10, "h": 32 },
+    "sourceSize": { "w": 10, "h": 32 },
+    "duration": 100
+   }
+ },
+ "meta": {
+  "app": "https://www.aseprite.org/",
+  "version": "1.3.6-x64",
+  "image": "inv_capacity_meter.png",
+  "format": "RGBA8888",
+  "size": { "w": 140, "h": 32 },
+  "scale": "1",
+  "frameTags": [
+  ],
+  "layers": [
+   { "name": "Indicator", "opacity": 255, "blendMode": "normal" },
+   { "name": "Meter", "opacity": 255, "blendMode": "normal" }
+  ],
+  "slices": [
+  ]
+ }
+}

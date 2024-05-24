@@ -43,6 +43,31 @@ public class GameInputProcessor implements InputProcessor {
                 System.out.println("Jump");
                 gameplayInputState.action = true;
                 break;
+            case Keys.ESCAPE:
+                System.out.println("Esc");
+                gameplayInputState.escape = true;
+                break;
+            case Keys.NUM_1:
+                gameplayInputState.invOne = true;
+                break;
+            case Keys.NUM_2:
+                gameplayInputState.invTwo = true;
+                break;
+            case Keys.NUM_3:
+                gameplayInputState.invThree = true;
+                break;
+            case Keys.NUM_4:
+                gameplayInputState.invFour = true;
+                break;
+            case Keys.NUM_5:
+                gameplayInputState.invFive = true;
+                break;
+            case Keys.NUM_6:
+                gameplayInputState.invSix = true;
+                break;
+            case Keys.Q:
+                gameplayInputState.discard = true;
+                break;
         }
         return true;
     }
@@ -72,13 +97,40 @@ public class GameInputProcessor implements InputProcessor {
             case Keys.SPACE:
                 gameplayInputState.action = false;
                 break;
+            case Keys.ESCAPE:
+                gameplayInputState.escape = false;
+                break;
+            case Keys.NUM_1:
+                gameplayInputState.invOne = false;
+                break;
+            case Keys.NUM_2:
+                gameplayInputState.invTwo = false;
+                break;
+            case Keys.NUM_3:
+                gameplayInputState.invThree = false;
+                break;
+            case Keys.NUM_4:
+                gameplayInputState.invFour = false;
+                break;
+            case Keys.NUM_5:
+                gameplayInputState.invFive = false;
+                break;
+            case Keys.NUM_6:
+                gameplayInputState.invSix = false;
+                break;
+            case Keys.Q:
+                gameplayInputState.discard = false;
+                break;
         }
         return true;
     }
 
+
     @Override
     public boolean keyTyped(char character) {
         // Handle character input if necessary
+
+
         return false;
     }
 

@@ -9,6 +9,8 @@ public class GameSettingsState {
     public static float[] itemJumpFactor = new float[] { -40f };
     public static float[] itemSpeedFactor = new float[] { 0.5f };
 
+    public static float[] launchVelocity = new float[] { 0.5f };
+
     public static boolean showGameOver = false;
 
 

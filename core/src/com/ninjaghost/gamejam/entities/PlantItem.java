@@ -15,6 +15,9 @@ public class PlantItem {
     public enum MODE { COLLECTABLE, INVENTORY }
     MODE m_mode = MODE.INVENTORY;
 
+    public enum SPAWN_ANIMATION { NONE, POP, LAUNCH }
+    SPAWN_ANIMATION m_spawnAnimation = SPAWN_ANIMATION.NONE;
+
     boolean visible = true;
     boolean isSpawnAnimationDone = false;
 
@@ -35,6 +38,8 @@ public class PlantItem {
     float getIsCollectableTimerMax = 0.8f;
     float animationTimerMax = 0.8f;
     float popHorizontalDirection = 4f;
+    String launchDirection = "none";
+    float launchVelocity = 0f;
 
     public PlantItem(int x, int y) {
         m_sprite = new Sprite(new Texture("plants/001_item.png"));
@@ -53,6 +58,9 @@ public class PlantItem {
     public void addStack() {
         stackCount++;
     }
+    public void removeStack() {
+        stackCount--;
+    }
 
     public int getStackCount() {
         return stackCount;
@@ -64,18 +72,43 @@ public class PlantItem {
 
     public void spawnItem() {
         m_mode = MODE.INVENTORY;
+        m_spawnAnimation = SPAWN_ANIMATION.NONE;
         m_sprite.setSize(32, 32);
         m_sprite.setFlip(false, false);
     }
 
     public void spawnCollectable() {
         if(m_sprite == null) return;
+        m_spawnAnimation = SPAWN_ANIMATION.POP;
         m_mode = MODE.COLLECTABLE;
         visible = true;
 
 //        collectableTargetPosition = new Vector2(m_sprite.getX() - 5f, m_sprite.getY() - 5f);
         m_sprite.setSize(8, 8);
         m_sprite.setPosition(m_position.x, m_position.y);
+    }
+
+    public void spawnCollectable(String direction, float velocity) {
+        spawnCollectable();
+
+        // use direction and velocity to change the "pop" animation to a "tossed" animation
+        m_spawnAnimation = SPAWN_ANIMATION.LAUNCH;
+        launchDirection = direction;
+
+        // 70f low, 150f high
+        float throwMinimumVelocity = 70f,
+              throwMaximumVelocity = 150f,
+              throwInputVelocityMultiplier = 35f;
+
+        launchVelocity = throwMinimumVelocity + (throwInputVelocityMultiplier * velocity);
+        if(launchVelocity > throwMaximumVelocity) {
+            launchVelocity = throwMaximumVelocity;
+        }
+
+        GameSettingsState.launchVelocity[0] = launchVelocity;
+        System.out.printf("lv: %s", launchVelocity);
+
+//        launchVelocity = GameSettingsState.launchVelocity[0];
     }
 
     public void update(float delta) {
@@ -87,26 +120,62 @@ public class PlantItem {
         }
 
         if(!isCollectable && m_mode == MODE.COLLECTABLE && !isSpawnAnimationDone) {
-            boolean start = false;
-            if(animationTimer <= 0f) {
-                start = true;
+            boolean start = false; // Special stuff happens only on the start
 
-                // starting out we want a solid set for velocity
-                gravityVelocity = GameSettingsState.itemJumpFactor[0];
-                popHorizontalDirection = ThreadLocalRandom.current().nextFloat(-8f, 8f);
+            if(m_spawnAnimation == SPAWN_ANIMATION.POP) {
+                if(animationTimer <= 0f) {
+                    start = true;
+
+                    // starting out we want a solid set for velocity
+                    gravityVelocity = GameSettingsState.itemJumpFactor[0];
+                    popHorizontalDirection = ThreadLocalRandom.current().nextFloat(-8f, 8f);
+                }
+
+                // do the next frame of the bounce animation here
+                animationTimer += delta;
+
+                // we're going to do a kind of bounce effect from the location registered
+                if(!start) {
+                    gravityVelocity += -GameSettingsState.itemGravityFactor[0] * delta;
+                }
+
+                m_position.x += popHorizontalDirection * delta;
+                m_position.y += gravityVelocity * delta;
+                m_sprite.setPosition(m_position.x, m_position.y);
+            } else if(m_spawnAnimation == SPAWN_ANIMATION.LAUNCH) {
+
+                if(animationTimer <= 0f) {
+                    start = true;
+
+                    // starting out we want a solid set for velocity
+
+                }
+
+                // do the next frame of the bounce animation here
+                animationTimer += delta;
+
+                if(!start) {
+                    launchVelocity -= 80f * delta;
+                }
+
+                if(launchDirection.equals("up")) {
+                    m_position.y -= launchVelocity * delta;
+
+                } else if(launchDirection.equals("down")) {
+                    m_position.y += launchVelocity * delta;
+
+                } else if(launchDirection.equals("left")) {
+                    m_position.x -= launchVelocity * delta;
+
+                } else if(launchDirection.equals("right")) {
+                    m_position.x += launchVelocity * delta;
+//                    m_position.y += 1f * delta;
+                }
+
+
+                m_sprite.setPosition(m_position.x, m_position.y);
             }
 
-            // do the next frame of the bounce animation here
-            animationTimer += delta;
-
-            // we're going to do a kind of bounce effect from the location registered
-            if(!start) {
-                gravityVelocity += -GameSettingsState.itemGravityFactor[0] * delta;
-            }
-
-            m_position.x += popHorizontalDirection * delta;
-            m_position.y += gravityVelocity * delta;
-            m_sprite.setPosition(m_position.x, m_position.y);
         }
 
         if(!isSpawnAnimationDone && m_mode == MODE.COLLECTABLE && animationTimer >= animationTimerMax) {
