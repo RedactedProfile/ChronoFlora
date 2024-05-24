@@ -150,8 +150,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
         Arrays.fill(puzzlemap, 56);
         System.out.println("Loaded " + tiles.size() + " tiles");
 
-        _field2 = new TextArea("Controls:\nW/A/S/D = Move around\nShift (hold) = Run\nSpace = Attack", uiSkin);
-        _field2.setSize(200, 100);
+        _field2 = new TextArea("Controls:\nW/A/S/D = Move around\nShift (hold) = Run\nSpace = Attack\ne = Use\n1-6 ][ = choose inventory", uiSkin);
+        _field2.setSize(200, 150);
         _field2.setPosition(  0, Gdx.graphics.getHeight() - _field2.getHeight());
         uiStage.addActor(_field2);
 

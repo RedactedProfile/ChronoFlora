@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.useVsync(true);
 		config.setForegroundFPS(60);
-		config.setTitle("ChronoFlora 0.4-alpha");
+		config.setTitle("ChronoFlora 0.5-alpha");
 		config.setWindowedMode(640, 480);
 		new Lwjgl3Application(new ChronoFloraGame(), config);
 	}
