@@ -186,6 +186,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
         // Load common sounds
         sounds.put("collect", Gdx.audio.newSound(Gdx.files.internal("sfx/pop.mp3")));
         sounds.put("swish", Gdx.audio.newSound(Gdx.files.internal("sfx/swish.mp3")));
+        sounds.put("throw", Gdx.audio.newSound(Gdx.files.internal("sfx/throw.mp3")));
 
 
         // Generate Islands
@@ -558,15 +559,9 @@ public class ChronoFloraGame extends ApplicationAdapter {
         // remove from rotation
         plantItemsForDeletion.add(plantItem);
 
-
-        // Randomize the volume and pitch
-//		Random random = new Random();
-//        float pitch = ThreadLocalRandom.current().nextFloat(0.5f, 1.5f);
-//        sounds.get("collect").play(0.4f, pitch, 0f);
         playSound("collect", 0.4f, true);
 
         // add to inventory
-
         // check if a stack of this item already exists in inventory and has available stack
         boolean stacked = false;
         for(PlantItem pl : playerInventory) {
@@ -636,6 +631,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
             PlantItem newPlantItem = new PlantItem((int) player.currentPosition.x, (int) player.currentPosition.y);
             newPlantItem.spawnCollectable(player.playerDirection, discardTimer);
             plantItems.add(newPlantItem);
+
+            playSound("throw", 0.4f, true);
 
             removeItemFromStack(playerInventory.get(activeInventorySlot -1));
         }
