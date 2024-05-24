@@ -187,6 +187,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
         sounds.put("collect", Gdx.audio.newSound(Gdx.files.internal("sfx/pop.mp3")));
         sounds.put("swish", Gdx.audio.newSound(Gdx.files.internal("sfx/swish.mp3")));
         sounds.put("throw", Gdx.audio.newSound(Gdx.files.internal("sfx/throw.mp3")));
+        sounds.put("rustle", Gdx.audio.newSound(Gdx.files.internal("sfx/rustle.mp3")));
 
 
         // Generate Islands
@@ -529,6 +530,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
         Plant plant = new Plant(locX, locY);
         plants.add(plant);
+        playSound("rustle", 0.6f, true);
         removeItemFromStack(from);
     }
 
