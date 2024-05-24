@@ -64,6 +64,8 @@ public class ChronoFloraGame extends ApplicationAdapter {
     int puzzlemapBreak = 12;
     int[] tilemap = new int[ tilemapBreak * tilemapBreak ];
     int[] puzzlemap = new int[ puzzlemapBreak * puzzlemapBreak ];
+    int puzzlemapBridgeLength = 6;
+    int puzzlemapOffset = -((puzzlemapBreak * 16) + (puzzlemapBridgeLength * 16));
 
     // UI Widgets
     ArrayList<TextField> _fields;
@@ -272,8 +274,6 @@ public class ChronoFloraGame extends ApplicationAdapter {
         }
 
         // Draw the Puzzle Input map island
-        int puzzlemapBridgeLength = 6;
-        int puzzlemapOffset = -((puzzlemapBreak * 16) + (puzzlemapBridgeLength * 16));
         row = 0; column = 0; // reset these values to start again
         for (Number number : puzzlemap) {
             if (column >= puzzlemapBreak) {
@@ -441,7 +441,23 @@ public class ChronoFloraGame extends ApplicationAdapter {
         }
         if(!validTile) {
             // 2. check if we're on the 2nd island
-            
+            int left = puzzlemapOffset / 16,
+                top = 0,
+                right = puzzlemapOffset / 16 + puzzlemapBreak,
+                bottom = puzzlemapBreak;
+
+            boolean bleft = activeTileX >= left,
+                    btop = activeTileY >= top,
+                    bright = activeTileX < right,
+                    bbottom = activeTileY < bottom;
+//
+//            System.out.printf("%d >= %d == %b\n%d >= %d == %b\n%d < %d == %b\n%d < %d == %b\n",
+//                    activeTileX, left, bleft, activeTileY, top, btop, activeTileX, right, bright, activeTileY, bottom, bbottom);
+
+            if(bleft && btop && bright && bbottom) {
+                validTile = true;
+            }
+//            System.out.printf("%b", validTile);
         }
 
         if(!validTile) {
