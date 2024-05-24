@@ -4,6 +4,7 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -97,6 +98,7 @@ public class ChronoFloraGame extends ApplicationAdapter {
 
     // Audio Related Stuff
     HashMap<String, Sound> sounds = new HashMap<>();
+    Music music;
 
     float countdownTimer = 5 * 60 * 1000; // Five minutes
 
@@ -188,6 +190,11 @@ public class ChronoFloraGame extends ApplicationAdapter {
         sounds.put("swish", Gdx.audio.newSound(Gdx.files.internal("sfx/swish.mp3")));
         sounds.put("throw", Gdx.audio.newSound(Gdx.files.internal("sfx/throw.mp3")));
         sounds.put("rustle", Gdx.audio.newSound(Gdx.files.internal("sfx/rustle.mp3")));
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("music/Spirit of the Girl.mp3"));
+        music.setLooping(true);
+        music.setVolume(0.5f);
+        music.play();
 
 
         // Generate Islands
